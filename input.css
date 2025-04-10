@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+/* Tailwind CSS directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS for transparency */
+.bg-transparent-on-scroll {
+    background-color: rgba(255, 255, 255, 0.8); /* Adjust opacity as needed */
+    backdrop-filter: blur(10px); /* Optional blur effect */
+}
+
+
+@font-face {
+    font-family: 'Bw Gradual DEMO';
+    src: url('https://your-cdn.com/fonts/BwGradualDEMO-Bold.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
+  }
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+  .hero-title {
+    font-family: 'Bw Gradual DEMO', sans-serif;
+    font-weight: 500;
+  }
+
+  <style>
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+</style>
+
+
+
