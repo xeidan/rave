@@ -1,43 +1,40 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const iconHamburger = document.getElementById('icon-hamburger');
-    const iconClose = document.getElementById('icon-close');
-    const navbar = document.getElementById('navbar');
+    const animatedElements = document.querySelectorAll('[data-animate]');
 
-    mobileMenuButton.addEventListener('click', function () {
-        mobileMenu.classList.toggle('hidden');
-        iconHamburger.classList.toggle('hidden');
-        iconClose.classList.toggle('hidden');
-    });
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const element = entry.target;
+          const animation = element.dataset.animate;
+          const delay = element.dataset.delay || 0;
 
-    document.addEventListener('click', function (event) {
-        if (!mobileMenu.classList.contains('hidden') && !mobileMenu.contains(event.target) && !mobileMenuButton.contains(event.target)) {
-            mobileMenu.classList.add('hidden');
-            iconHamburger.classList.remove('hidden');
-            iconClose.classList.add('hidden');
+          element.style.transition = 'opacity 1000ms ease-out, transform 1000ms ease-out';
+          element.style.transitionDelay = `${delay}ms`;
+          element.style.opacity = '1';
+          element.style.transform = 'translateY(0)';
+
+          observer.unobserve(element);
         }
+      });
+    }, { threshold: 0.1 });
+
+    animatedElements.forEach(element => {
+      element.style.opacity = '0';
+      element.style.transform = 'translateY(20px)';
+      observer.observe(element);
     });
 
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {
-            navbar.classList.add('bg-transparent-on-scroll');
-        } else {
-            navbar.classList.remove('bg-transparent-on-scroll');
-        }
-    });
-});
-
-
-
-// Live Gradient Animation
-const gradient = document.querySelector('.animate-gradient');
-let angle = 0;
-
-function animateGradient() {
-    angle += 0.2;
-    gradient.style.background = `linear-gradient(${angle}deg, #8B5CF6, #3B82F6)`;
-    requestAnimationFrame(animateGradient);
-}
-
-animateGradient();
+    const container = document.getElementById('starfield');
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      const size = Math.random() * 2 + 1;
+      star.className = 'star';
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.animationDuration = `${1.5 + Math.random() * 2}s, ${15 + Math.random() * 10}s`;
+      star.style.animationDelay = `${Math.random() * 5}s, ${Math.random() * 10}s`;
+      container.appendChild(star);
+    }
+  });
