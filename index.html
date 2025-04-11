@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Design System Waitlist</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="input.css">
+</head>
+<body class="bg-black text-white min-h-screen flex items-center justify-center relative">
+  <div id="starfield" class="absolute inset-0 z-0 pointer-events-none"></div>
+  <div class="absolute inset-0 pointer-events-none z-0 bg-gradient-to-br from-transparent to-[#1a1a1a]"></div>
+
+  <nav class="navbar">
+    <img class="w-32" src="ravees.svg" alt="">
+    <a href="faq.html" class="bg-white/5 border border-white/10 px-3 py-1.5 text-sm rounded-md hover:bg-white/10 transition">FAQs</a>
+  </nav>
+
+  <div class="z-10 text-center space-y-2 max-w-md px-6">
+    <div class="flex justify-center">
+      <div class="w-32 h-32 flex items-center justify-center duration-1000 ease-out" data-animate="fade-in-up" data-delay="200">
+        <img class="" src="holl.png" alt="">
+      </div>
+    </div>
+    <div>
+      <h1 class="text-6xl md:text-6xl lg:text-7xl font-semibold flex flex-wrap justify-center whitespace-nowrap" data-animate="fade-in-up" data-delay="300">
+        <span class="bg-gradient-to-r from-[#00FFFF] to-blue-600 text-transparent bg-clip-text p-2 duration-1000 ease-out">AI-Powered</span>
+        <span class="bg-gradient-to-b from-gray-600 to-white text-transparent bg-clip-text p-2 duration-1000 ease-out">Staking!</span>
+      </h1>
+      <p class="text-md text-gray-300 max-w-lg mx-auto pt-6" data-animate="fade-in-up" data-delay="400">Grow Your Assets with AI-Driven Precision. Smart, Secure, and Profitable.</p>
+    </div>
+    <form class="space-y-4" data-animate="fade-in-up" data-delay="500">
+      <input type="text" placeholder="Full name..." class="w-full bg-white/5 border border-white/10 text-white px-4 py-3 rounded-md placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-pink-500 font-light text-md">
+      <input type="email" placeholder="Email address..." class="w-full bg-white/5 border border-white/10 text-white px-4 py-3 rounded-md placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-pink-500 font-light text-md">
+      <button type="submit" class="w-full flex items-center justify-center bg-gradient-to-r from-[#00FFFF] to-blue-600 hover:opacity-90 text-white px-4 py-3 rounded-md transition">
+        Join Waitlist <span class="ml-2">→</span>
+      </button>
+    </form>
+    <div class="text-xs text-gray-500" data-animate="fade-in-down" data-delay="600">
+      <p class="mt-8 text-center pt-4">By signing up, you agree to our <a href="#" class="text-blue-400 hover:underline">Waitlist</a> and <a href="#" class="text-blue-400 hover:underline">Referral Program Terms</a>.</p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const animatedElements = document.querySelectorAll('[data-animate]');
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const element = entry.target;
+            const animation = element.dataset.animate;
+            const delay = element.dataset.delay || 0;
+
+            element.style.transition = 'opacity 1000ms ease-out, transform 1000ms ease-out';
+            element.style.transitionDelay = `${delay}ms`;
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
+
+            observer.unobserve(element);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      animatedElements.forEach(element => {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(20px)';
+        observer.observe(element);
+      });
+
+      const container = document.getElementById('starfield');
+      for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        const size = Math.random() * 2 + 1;
+        star.className = 'star';
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.animationDuration = `${1.5 + Math.random() * 2}s, ${15 + Math.random() * 10}s`;
+        star.style.animationDelay = `${Math.random() * 5}s, ${Math.random() * 10}s`;
+        container.appendChild(star);
+      }
+    });
+  </script>
+</body>
+</html>
