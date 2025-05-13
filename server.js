@@ -5,6 +5,9 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { body, validationResult, param } = require('express-validator');
+const { Pool } = require('pg');
+const { parse } = require('pg-connection-string');
+const nodemailer = require('nodemailer'); // Import nodemailer
 
 const app = express();
 app.use(express.json());
@@ -30,6 +33,85 @@ if (process.env.DATABASE_URL) {
     });
 }
 
+// Nodemailer setup
+const transporter = nodemailer.createTransport({
+    service: 'gmail', // e.g., 'gmail'
+    auth: {
+        user: process.env.EMAIL_USER,  //  Set these in your .env file
+        pass: process.env.EMAIL_PASS,
+    },
+});
+
+
+// Function to send confirmation email
+async function sendConfirmationEmail(email, name) {
+    try {
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Welcome to Rave!',
+            html: `<p>Hi ${name},</p>
+                   <p>Thank you for joining the Rave waitlist!  We're excited to have you.</p>
+                   <p>We'll keep you updated on our progress.</p>`,
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log(`Confirmation email sent to ${email}`);
+    } catch (error) {
+        console.error('Error sending email:', error);
+        //  Don't block user signup if email fails.  Log the error.
+    }
+}
+
+
+
+// Modified User Endpoint (POST /users)
+app.post('/users', [
+    body('name').notEmpty().withMessage('Name is required'),
+    body('email').isEmail().withMessage('Invalid email address'),
+    body('referred_by').optional().isAlphanumeric().withMessage('Referral code must be alphanumeric'),
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { name, email, referred_by } = req.body;
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN');
+        let referralCode;
+        if (referred_by) {
+            const referringUser = await client.query('SELECT * FROM users WHERE referral_code = $1', [referred_by]);
+            if (referringUser.rows.length > 0) {
+                await client.query('UPDATE users SET rave_coins = rave_coins + 10 WHERE referral_code = $1', [referred_by]);
+            }
+             referralCode = generateReferralCode();
+             await client.query('INSERT INTO users (name, email, referral_code, referred_by) VALUES ($1, $2, $3, $4)', [name, email, referralCode, referred_by]);
+
+        }
+        else{
+             referralCode = generateReferralCode();
+             await client.query('INSERT INTO users (name, email, referral_code) VALUES ($1, $2, $3)', [name, email, referralCode]);
+        }
+
+
+        await client.query('COMMIT');
+
+        // Send confirmation email (non-blocking)
+        sendConfirmationEmail(email, name);
+
+        res.status(201).json({ message: 'User signed up successfully', referral_code: referralCode }); // Include the referral code in the response
+
+    } catch (err) {
+        await client.query('ROLLBACK');
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    } finally {
+        client.release();
+    }
+});
 
     // ... get user data from req.body ...
     app.post('/users', async (req, res) => {
@@ -158,6 +240,24 @@ app.post('/users', [
         client.release();
     }
 });
+
+const result = await client.query('INSERT INTO users (name, email, referral_code, referred_by) VALUES ($1, $2, $3, $4) RETURNING id', [name, email, referralCode, referred_by]);
+
+const positionResult = await client.query(
+    'SELECT COUNT(*) FROM users WHERE id <= $1',
+    [result.rows[0].id]
+);
+const position = parseInt(positionResult.rows[0].count, 10);
+
+// Save the position (optional)
+await client.query('UPDATE users SET position = $1 WHERE id = $2', [position, result.rows[0].id]);
+
+res.status(201).json({
+    message: 'User signed up successfully',
+    referral_code: referralCode,
+    position: position
+});
+
 
 
 // Get All Users Endpoint
