@@ -141,31 +141,44 @@
     });
 
     document.getElementById('waitlistForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim(); // NEW
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim(); // Unused, optional
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-      if (!emailRegex.test(email)) {
-        alert('Please enter a valid email address.');
-        return;
-      }
+  if (!emailRegex.test(email)) {
+    alert('Please enter a valid email address.');
+    return;
+  }
 
-      const data = { email, password };
-      const apiUrl = 'https://pure-sea-47438-9b41a08c5720.herokuapp.com';
+  if (!name) {
+    alert('Please enter your full name.');
+    return;
+  }
 
-      fetch(`${apiUrl}/users`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      .then(res => res.ok ? res.json() : res.json().then(err => { throw new Error(err.message); }))
-      .then(response => {
-        localStorage.setItem('referralCode', response.referral_code);
-        window.location.href = 'waitlist.html';
-      })
-      .catch(error => alert(error.message || 'Something went wrong'));
-    });
+  const referralCode = localStorage.getItem('referralCode'); // Optional if used
+  const data = {
+    name,
+    email,
+    referred_by: referralCode || null
+  };
+
+  const apiUrl = 'https://pure-sea-47438-9b41a08c5720.herokuapp.com';
+
+  fetch(`${apiUrl}/users`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  })
+  .then(res => res.ok ? res.json() : res.json().then(err => { throw new Error(err.message); }))
+  .then(response => {
+    localStorage.setItem('referralCode', response.referral_code);
+    window.location.href = 'waitlist.html';
+  })
+  .catch(error => alert(error.message || 'Something went wrong'));
+});
+
 
     const animatedElements = document.querySelectorAll('[data-animate]');
     const observer = new IntersectionObserver(entries => {
