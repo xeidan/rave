@@ -8,6 +8,9 @@
   <link rel="icon" href="/favicon.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    html, body {
+      overflow-x: hidden;
+    }
     body {
       font-family: 'Inter', sans-serif;
     }
@@ -24,13 +27,14 @@
     }
     @keyframes move {
       0% { transform: translate(0, 0); }
-      100% { transform: translate(100px, 100px); }
+      100% { transform: translate(50px, 50px); } /* reduced movement */
     }
     [data-animate] {
       opacity: 0;
       transform: translateY(20px);
     }
   </style>
+  
 </head>
 <body class="bg-black text-white min-h-screen flex items-center justify-center relative overflow-hidden">
 
@@ -63,13 +67,6 @@
 
     <form id="waitlistForm" class="space-y-4" data-animate data-delay="500">
       <input 
-        type="text" 
-        id="fullName" 
-        placeholder="Full name" 
-        class="w-full bg-white/5 border border-white/10 text-white px-4 py-3 rounded-md placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 font-light text-md"
-        required
-      />
-      <input 
         type="email" 
         id="email" 
         placeholder="Email address" 
@@ -82,6 +79,7 @@
           id="password" 
           placeholder="Password"
           class="w-full bg-white/5 border border-white/10 text-white px-4 py-3 rounded-md placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 font-light text-md"
+          required
         />
         <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 px-4 flex items-center text-gray-400 hover:text-white focus:outline-none focus:shadow-outline">
           Show
@@ -109,7 +107,6 @@
   </div>
 
   <script>
-    // Starfield
     const container = document.getElementById('starfield');
     for (let i = 0; i < 100; i++) {
       const star = document.createElement('div');
@@ -123,9 +120,9 @@
       container.appendChild(star);
     }
 
-    // Password toggle
     const togglePassword = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('password');
+
     togglePassword.addEventListener('click', () => {
       if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
@@ -136,31 +133,18 @@
       }
     });
 
-    // Form submission
     document.getElementById('waitlistForm').addEventListener('submit', function (e) {
       e.preventDefault();
-      const name = document.getElementById('fullName').value.trim();
       const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim(); // Optional
+      const password = document.getElementById('password').value.trim();
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-      if (!name) {
-        alert('Please enter your full name.');
-        return;
-      }
 
       if (!emailRegex.test(email)) {
         alert('Please enter a valid email address.');
         return;
       }
 
-      const referralCode = localStorage.getItem('referralCode');
-      const data = {
-        name,
-        email,
-        referred_by: referralCode || null
-      };
-
+      const data = { email, password };
       const apiUrl = 'https://pure-sea-47438-9b41a08c5720.herokuapp.com';
 
       fetch(`${apiUrl}/users`, {
@@ -176,7 +160,6 @@
       .catch(error => alert(error.message || 'Something went wrong'));
     });
 
-    // Scroll animations
     const animatedElements = document.querySelectorAll('[data-animate]');
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
