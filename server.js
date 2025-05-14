@@ -1,9 +1,13 @@
 require('dotenv').config();
 
 const express = require('express');
+const app = express();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+app.use(cors({
+    origin: '*'
+  }));
 const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const { body, validationResult, param } = require('express-validator');
@@ -11,7 +15,7 @@ const { Pool } = require('pg');
 const { parse } = require('pg-connection-string');
 const nodemailer = require('nodemailer');
 
-const app = express();
+
 app.use(cors());
 app.use(express.json());
 app.use(morgan('combined'));
@@ -27,7 +31,11 @@ app.use(limiter);
 let pool;
 if (process.env.DATABASE_URL) {
     const pgconfig = parse(process.env.DATABASE_URL);
-    pool = new Pool(pgconfig);
+    pgconfig.ssl = {
+        rejectUnauthorized: false,
+      };
+      pool = new Pool(pgconfig);
+      
 } else {
     pool = new Pool({
         user: process.env.DB_USER,
