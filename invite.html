@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Invitation to Earn Rave</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="input.css">
+</head>
+<body class="bg-black text-white min-h-screen relative">
+  <div id="starfield" class="absolute inset-0 z-0 pointer-events-none"></div>
+  <div class="absolute inset-0 pointer-events-none z-0 bg-gradient-to-br from-transparent to-[#1a1a1a]"></div>
+
+  <nav class="px-4 py-4 w-full flex justify-between items-center z-10 relative">
+    <img class="w-32" src="logo.svg" alt="Rave Logo">
+    <a href="faq.html" class="bg-white/5 border border-white/10 px-3 py-1.5 text-sm rounded-md hover:bg-white/10 transition">FAQs</a>
+  </nav>
+
+  <div class="flex items-center justify-center px-6 py-8 z-10 flex-grow">
+    <div class="flex flex-col items-center justify-center max-w-md w-full">
+
+      <div class="flex justify-center mb-8">
+        <div class="w-32 h-32 flex items-center justify-center duration-1000 ease-out" data-animate="fade-in-up" data-delay="200">
+          <img class="w-full" src="holl.png" alt="Rings">
+        </div>
+      </div>
+
+      <div class="text-center mb-8">
+        <h1 class="text-2xl font-semibold mb-2 bg-gradient-to-r from-[#00FFFF] to-blue-600 text-transparent bg-clip-text p-2 duration-1000 ease-out" data-animate="fade-in-up" data-delay="300">Miracle Ikekhua</h1>
+        <p class="text-4xl font-bold mb-4 bg-gradient-to-b from-gray-600 to-white text-transparent bg-clip-text p-2 duration-1000 ease-out" data-animate="fade-in-up" data-delay="400">has invited you to Earnrave</p>
+        <p class="text-lg text-gray-300" data-animate="fade-in-up" data-delay="500">Sign up to join the waitlist and start earning rewards by referring your friends.</p>
+      </div>
+
+      <form class="space-y-4" id="waitlistForm" data-animate="fade-in-up" data-delay="500">
+        <input 
+          type="text" 
+          id="fullName"
+          placeholder="Full name..." 
+          class="w-full bg-white/5 border border-white/10 text-white px-4 py-3 rounded-md placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-pink-500 font-light text-md"
+        />
+        <input 
+          type="email" 
+          id="email"
+          placeholder="Email address..." 
+          class="w-full bg-white/5 border border-white/10 text-white px-4 py-3 rounded-md placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-pink-500 font-light text-md"
+        />
+        <button 
+          type="submit" 
+          class="w-full flex items-center justify-center bg-gradient-to-r from-[#00FFFF] to-blue-600 hover:opacity-90 text-white px-4 py-3 rounded-md transition"
+        >
+          Join Waitlist <span class="ml-2">→</span>
+        </button>
+      </form>
+      
+      <script>
+        document.getElementById('waitlistForm').addEventListener('submit', function(event) {
+          event.preventDefault(); // Prevent default form submission
+
+          // Get input values
+          const fullName = document.getElementById('fullName').value.trim();
+          const email = document.getElementById('email').value.trim();
+
+          if (!fullName || !email) {
+              alert('Please enter your full name and email address.');
+              return;
+          }
+
+          const referredBy = 'Miracle Ikekhua'; // The person who invited
+
+          // Call the sign-up function
+          handleSignUp(event, referredBy);
+        });
+
+        function handleSignUp(event, referredBy) {
+            event.preventDefault();
+
+            const fullName = document.getElementById('fullName').value;  // Ensure input IDs are correct
+            const email = document.getElementById('email').value;
+
+            if (!fullName.trim() || !email.trim()) {
+                alert('Please enter your name and email.');
+                return;
+            }
+
+            const data = { name: fullName, email: email, referred_by: referredBy };
+
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://pure-sea-47438-9b41a08c5720.herokuapp.com'; // Fallback URL
+            fetch(`${apiUrl}/users`, {  // Replace with your actual API endpoint
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(`Sign-up failed: ${response.status} - ${err.message || 'Something went wrong'}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(responseData => {
+                console.log('Success:', responseData);
+                alert('Thank you for joining the waitlist!');
+                localStorage.setItem('referralCode', responseData.referral_code); // Store referral code
+                window.location.href = 'waitlist.html';  // Redirect to waitlist page
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message);
+            });
+        }
+      </script>
+
+      <div class="text-xs text-gray-500" data-animate="fade-in-down" data-delay="600">
+        <p class="mt-8 text-center pt-4">By signing up, you agree to our <a href="#" class="text-blue-400 hover:underline">Waitlist</a> and <a href="#" class="text-blue-400 hover:underline">Referral Program Terms</a>.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const animatedElements = document.querySelectorAll('[data-animate]');
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const element = entry.target;
+            const animation = element.dataset.animate;
+            const delay = element.dataset.delay || 0;
+
+            element.style.transition = 'opacity 1000ms ease-out, transform 1000ms ease-out';
+            element.style.transitionDelay = `${delay}ms`;
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
+
+            observer.unobserve(element);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      animatedElements.forEach(element => {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(20px)';
+        observer.observe(element);
+      });
+
+      const container = document.getElementById('starfield');
+      for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        const size = Math.random() * 2 + 1;
+        star.className = 'star';
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.animationDuration = `${1.5 + Math.random() * 2}s, ${15 + Math.random() * 10}s`;
+        star.style.animationDelay = `${Math.random() * 5}s, ${Math.random() * 10}s`;
+        container.appendChild(star);
+      }
+    });
+  </script>
+</body>
+</html>

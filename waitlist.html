@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Waitlist Success</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="input.css">
+</head>
+<body class="bg-black text-white min-h-screen relative flex flex-col"> 
+  <div id="starfield" class="absolute inset-0 z-0 pointer-events-none"></div>
+  <div class="absolute inset-0 pointer-events-none z-0 bg-gradient-to-br from-transparent to-[#1a1a1a]"></div>
+
+  <nav class="px-4 py-4 w-full flex justify-between items-center z-10 relative">
+    <img class="w-32" src="logo.svg" alt="Rave Logo">
+    <a href="index.html" class="bg-white/5 border border-white/10 px-3 py-1.5 text-sm rounded-md hover:bg-white/10 transition">Back</a>
+  </nav>
+
+  <div class="md:flex-grow flex items-center justify-center px-6 py-8 z-10">
+    <div class="flex flex-col md:flex-row justify-center items-start gap-8 max-w-4xl w-full">  
+      <div class="md:w-1/2 text-left">
+        <h1 class="text-5xl md:text-6xl font-normal mb-4 bg-gradient-to-b from-gray-600 to-white text-transparent bg-clip-text"
+      data-animate="fade-in-up" data-delay="200">You're on the list at #2,136</h1>
+        <p class="text-gray-300 text-lg md:text-lg font-thin leading-relaxed " data-animate="fade-in-up" data-delay="300">Thank you for joining the waitlist.</p>
+        <p class="text-gray-300 text-lg md:text-lg font-thin leading-relaxed " data-animate="fade-in-up" data-delay="300">You'll be the first to know when we launch. <span class="text-yellow-400">🎉</span></p>
+        <p class="text-gray-300 text-lg md:text-lg font-thin leading-relaxed " data-animate="fade-in-up" data-delay="300">Keep an eye on your inbox for updates on our launch date.</p>
+      </div>
+
+      <div class="md:w-1/2 bg-white/5 border border-white/10 rounded-2xl p-6 text-left">
+        <h2 class="text-xl  mb-4 font-thin">Want to move up the waitlist to get early access and earn rewards?</h2>
+        <p class="text-gray-200 mb-4 font-thin">Invite your friends to join the waitlist too.</p>
+
+        <div class="flex items-center justify-between mb-4">
+          <p class="text-gray-200 font-thin">Refer 5 friends for a big jump</p>
+          <span class="text-blue-500">0/5</span>
+        </div>
+
+        <div class="flex items-center justify-between mb-4 font-light text-gray-100">
+          <input type="text" id="referralLink" value="https://earnrave.com/?ref=75655..." class="bg-transparent border border-white/10 rounded-md px-4 py-2 text-white w-3/4" readonly>
+          <button id="copyButton" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-md text-white">Copy</button>
+        </div>
+
+        <p class="text-gray-200 mb-4 font-thin">The more you share, the higher you'll climb up the list.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Starfield Effect
+    const container = document.getElementById('starfield');
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      const size = Math.random() * 2 + 1;
+      star.className = 'star';
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.animationDuration = `${1.5 + Math.random() * 2}s, ${15 + Math.random() * 10}s`;
+      star.style.animationDelay = `${Math.random() * 5}s, ${Math.random() * 10}s`;
+      container.appendChild(star);
+    }
+
+    // Copy Functionality
+    document.getElementById('copyButton').addEventListener('click', function() {
+      const referralLinkInput = document.getElementById('referralLink');
+      referralLinkInput.select();
+      referralLinkInput.setSelectionRange(0, 99999); // For mobile devices
+      document.execCommand('copy');
+      alert('Referral link copied to clipboard!'); // Optional: Provide user feedback
+    });
+
+    // Handle Referral Code
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const refCode = urlParams.get('ref') || localStorage.getItem('referralCode');
+      
+      if (!refCode) {
+        window.location.href = 'index.html';  // No referral code found, redirect
+        return;
+      }
+
+      fetchUserData(refCode);
+      
+      function fetchUserData(referralCode) {
+        fetch(`https://pure-sea-47438-9b41a08c5720.herokuapp.com/users/${referralCode}`, {  
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to fetch user data');
+          return response.json();
+        })
+        .then(data => {
+          console.log(data);
+          document.getElementById('positionDisplay').textContent = data.position;
+          document.getElementById('pointsDisplay').textContent = data.rave_coins;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert(error.message);
+          window.location.href = 'index.html';  // Redirect to homepage on error
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>
