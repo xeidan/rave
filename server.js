@@ -201,5 +201,42 @@ app.get('/', (req, res) => {
   res.send('Rave Waitlist API Running');
 });
 
+//User sign in
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    const client = await pool.connect();
+
+    try {
+        const result = await client.query('SELECT * FROM users WHERE email = $1', [email]);
+        if (result.rows.length === 0) {
+            return res.status(400).json({ error: 'User not found' });
+        }
+
+        const user = result.rows[0];
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Incorrect password' });
+        }
+
+        res.json({
+            name: `${user.first_name} ${user.last_name}`,
+            email: user.email,
+            referral_code: user.referral_code,
+            position: user.position,
+            rave_coins: user.rave_coins
+        });
+    } catch (err) {
+        console.error('Login Error:', err.message);
+        res.status(500).json({ error: 'Internal server error' });
+    } finally {
+        client.release();
+    }
+});
+
+app.get('/test', (req, res) => {
+    res.send('Backend is alive');
+  });
+  
+
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
