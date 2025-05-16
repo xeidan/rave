@@ -141,7 +141,9 @@ app.post('/users', [
 
     const { first_name, last_name, email, phone, password, referred_by } = req.body;
     const name = `${first_name} ${last_name}`;
-    const client = await pool.connect(); // <-- you were missing this line
+    
+    const client = await pool.connect(); 
+
 
     try {
         await client.query('BEGIN');
