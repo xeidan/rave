@@ -15,14 +15,12 @@ const nodemailer = require('nodemailer');
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 app.use(morgan('combined'));
+app.set('trust proxy', 1); // Fixes rate-limit trust issue on Heroku
 
 // Rate Limiter
-app.use(rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-}));
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 
-// DB connection
+// Database Connection
 let pool;
 if (process.env.DATABASE_URL) {
   const config = parse(process.env.DATABASE_URL);
@@ -38,7 +36,7 @@ if (process.env.DATABASE_URL) {
   });
 }
 
-// Email setup
+// Email Setup
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -86,7 +84,7 @@ function authenticateAdmin(req, res, next) {
   next();
 }
 
-// Admin login
+// Admin Login
 app.post('/admin/login', async (req, res) => {
   const { username, password } = req.body;
   const client = await pool.connect();
@@ -104,74 +102,95 @@ app.post('/admin/login', async (req, res) => {
   }
 });
 
-// User signup
+// User Sign-up
+// User Sign-up
 app.post('/users', [
-  body('first_name').notEmpty().withMessage('First name is required'),
-  body('last_name').notEmpty().withMessage('Last name is required'),
-  body('email').isEmail().withMessage('Invalid email address'),
-  body('referred_by')
-    .optional({ nullable: true, checkFalsy: true })
-    .isAlphanumeric().withMessage('Referral code must be alphanumeric')
-], async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-
-  const { first_name, last_name, email, phone, password, referred_by } = req.body;
-  const name = `${first_name} ${last_name}`;
-  const client = await pool.connect();
-
-  try {
-    await client.query('BEGIN');
-
-    // ✅ Check if email already exists
-    const existing = await client.query('SELECT id FROM users WHERE email = $1', [email]);
-    if (existing.rows.length > 0) {
-      await client.query('ROLLBACK');
-      return res.status(400).json({ error: 'Email already registered' });
-    }
-
-    // ✅ Handle referral
-    if (referred_by) {
-      const ref = await client.query('SELECT * FROM users WHERE referral_code = $1', [referred_by]);
-      if (ref.rows.length > 0) {
-        await client.query('UPDATE users SET rave_coins = rave_coins + 10 WHERE referral_code = $1', [referred_by]);
+    body('first_name').notEmpty(),
+    body('last_name').notEmpty(),
+    body('email').isEmail(),
+    body('password').notEmpty(),
+  ], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+  
+    const { first_name, last_name, email, phone, password, referred_by } = req.body;
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+  
+      // Check if email already exists
+      const existing = await client.query('SELECT id FROM users WHERE email = $1', [email]);
+      if (existing.rows.length > 0) {
+        await client.query('ROLLBACK');
+        return res.status(400).json({ error: 'Email already registered' });
       }
+  
+      // 🔐 Properly hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      const referralCode = generateReferralCode();
+  
+      // Handle referral bonus
+      if (referred_by) {
+        const ref = await client.query('SELECT id FROM users WHERE referral_code = $1', [referred_by]);
+        if (ref.rows.length > 0) {
+          await client.query('UPDATE users SET rave_coins = rave_coins + 10 WHERE referral_code = $1', [referred_by]);
+        }
+      }
+  
+      const result = await client.query(`
+        INSERT INTO users (first_name, last_name, email, phone, password, referral_code, referred_by)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING id
+      `, [first_name, last_name, email, phone, hashedPassword, referralCode, referred_by || null]);
+  
+      const positionRes = await client.query('SELECT COUNT(*) FROM users WHERE id <= $1', [result.rows[0].id]);
+      const position = parseInt(positionRes.rows[0].count, 10);
+  
+      await client.query('UPDATE users SET position = $1 WHERE id = $2', [position, result.rows[0].id]);
+      await client.query('COMMIT');
+  
+      res.status(201).json({ message: 'User created', referral_code: referralCode, position });
+    } catch (err) {
+      await client.query('ROLLBACK');
+      console.error('Error creating user:', err.message);
+      res.status(500).json({ error: 'Server error' });
+    } finally {
+      client.release();
+    }
+  });
+  
+
+// User Login
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const client = await pool.connect();
+  try {
+    const result = await client.query('SELECT * FROM users WHERE LOWER(email) = LOWER($1)', [email]);
+    if (result.rows.length === 0) {
+      return res.status(400).json({ error: 'User not found' });
     }
 
-    const referralCode = generateReferralCode();
-    const result = await client.query(
-      `INSERT INTO users (first_name, last_name, email, phone, password, referral_code, referred_by)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
-       RETURNING id`,
-      [first_name, last_name, email, phone, password, referralCode, referred_by || null]
-    );
+    const user = result.rows[0];
+    const isMatch = await bcrypt.compare(password, user.password); // ✅ HASH COMPARE
+    if (!isMatch) return res.status(401).json({ error: 'Incorrect password' });
 
-    const positionRes = await client.query(
-      'SELECT COUNT(*) FROM users WHERE id <= $1',
-      [result.rows[0].id]
-    );
-    const position = parseInt(positionRes.rows[0].count, 10);
-
-    await client.query('UPDATE users SET position = $1 WHERE id = $2', [position, result.rows[0].id]);
-    await client.query('COMMIT');
-
-    await sendConfirmationEmail(email, name);
-
-    res.status(201).json({
-      message: 'User signed up successfully',
-      referral_code: referralCode,
-      position
+    res.json({
+      name: `${user.first_name} ${user.last_name}`,
+      email: user.email,
+      referral_code: user.referral_code,
+      position: user.position,
+      rave_coins: user.rave_coins
     });
   } catch (err) {
-    await client.query('ROLLBACK');
-    console.error('❌ Error creating user:', err.message);
+    console.error('Login Error:', err.message);
     res.status(500).json({ error: 'Internal server error' });
   } finally {
     client.release();
   }
 });
 
-// Admin dashboard
+// Admin Dashboard
 app.get('/admin/dashboard', authenticateAdmin, async (req, res) => {
   try {
     const [totalUsers, totalCoins, topReferrers] = await Promise.all([
@@ -200,43 +219,6 @@ app.get('/admin/dashboard', authenticateAdmin, async (req, res) => {
 app.get('/', (req, res) => {
   res.send('Rave Waitlist API Running');
 });
-
-//User sign in
-app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-    const client = await pool.connect();
-
-    try {
-        const result = await client.query('SELECT * FROM users WHERE email = $1', [email]);
-        if (result.rows.length === 0) {
-            return res.status(400).json({ error: 'User not found' });
-        }
-
-        const user = result.rows[0];
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(401).json({ error: 'Incorrect password' });
-        }
-
-        res.json({
-            name: `${user.first_name} ${user.last_name}`,
-            email: user.email,
-            referral_code: user.referral_code,
-            position: user.position,
-            rave_coins: user.rave_coins
-        });
-    } catch (err) {
-        console.error('Login Error:', err.message);
-        res.status(500).json({ error: 'Internal server error' });
-    } finally {
-        client.release();
-    }
-});
-
-app.get('/test', (req, res) => {
-    res.send('Backend is alive');
-  });
-  
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
