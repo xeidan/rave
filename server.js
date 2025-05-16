@@ -127,16 +127,21 @@ app.post('/admin/login', async (req, res) => {
     }
 });
 
+const bcrypt = require('bcrypt');
+const { body, validationResult } = require('express-validator');
+
 app.post('/users', [
-    body('name').notEmpty().withMessage('Name is required'),
+    body('first_name').notEmpty().withMessage('First name is required'),
+    body('last_name').notEmpty().withMessage('Last name is required'),
     body('email').isEmail().withMessage('Invalid email address'),
     body('referred_by').optional().isAlphanumeric()
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-    const { name, email, referred_by } = req.body;
-    const client = await pool.connect();
+    const { first_name, last_name, email, phone, password, referred_by } = req.body;
+    const name = `${first_name} ${last_name}`;
+    const client = await pool.connect(); // <-- you were missing this line
 
     try {
         await client.query('BEGIN');
@@ -150,8 +155,10 @@ app.post('/users', [
 
         const referralCode = generateReferralCode();
         const result = await client.query(
-            'INSERT INTO users (name, email, referral_code, referred_by) VALUES ($1, $2, $3, $4) RETURNING id',
-            [name, email, referralCode, referred_by]
+            `INSERT INTO users (first_name, last_name, email, phone, password, referral_code, referred_by)
+             VALUES ($1, $2, $3, $4, $5, $6, $7)
+             RETURNING id`,
+            [first_name, last_name, email, phone, password, referralCode, referred_by]
         );
 
         const positionResult = await client.query(
@@ -161,8 +168,8 @@ app.post('/users', [
         const position = parseInt(positionResult.rows[0].count, 10);
 
         await client.query('UPDATE users SET position = $1 WHERE id = $2', [position, result.rows[0].id]);
-
         await client.query('COMMIT');
+
         sendConfirmationEmail(email, name);
 
         res.status(201).json({
@@ -178,6 +185,8 @@ app.post('/users', [
         client.release();
     }
 });
+
+
 
 // Dashboard mock route
 app.get('/admin/dashboard', authenticateAdmin, async (req, res) => {
