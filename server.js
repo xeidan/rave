@@ -111,7 +111,7 @@ app.post('/users', [
   body('first_name').notEmpty().withMessage('First name is required'),
   body('last_name').notEmpty().withMessage('Last name is required'),
   body('email').isEmail().withMessage('Invalid email address'),
-  body('referred_by').optional({ checkFalsy: true }).isAlphanumeric()
+  body('referred_by').optional({ nullable: true, checkFalsy: true }).isAlphanumeric().withMessage('Referral code must be alphanumeric')
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
