@@ -152,6 +152,7 @@ app.post('/users', [
   } catch (err) {
     await client.query('ROLLBACK');
     console.error('Signup error:', err);
+    console.error('Error details:', err.message, err.stack);
     res.status(500).json({ error: 'Internal server error' });
   } finally {
     client.release();
