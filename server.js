@@ -103,63 +103,59 @@ app.post('/admin/login', async (req, res) => {
 });
 
 // User Sign-up
-// User Sign-up
 app.post('/users', [
-    body('first_name').notEmpty(),
-    body('last_name').notEmpty(),
-    body('email').isEmail(),
-    body('password').notEmpty(),
-  ], async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-  
-    const { first_name, last_name, email, phone, password, referred_by } = req.body;
-    const client = await pool.connect();
-    try {
-      await client.query('BEGIN');
-  
-      // Check if email already exists
-      const existing = await client.query('SELECT id FROM users WHERE email = $1', [email]);
-      if (existing.rows.length > 0) {
-        await client.query('ROLLBACK');
-        return res.status(400).json({ error: 'Email already registered' });
-      }
-  
-      // 🔐 Properly hash the password
-      const hashedPassword = await bcrypt.hash(password, 10);
-  
-      const referralCode = generateReferralCode();
-  
-      // Handle referral bonus
-      if (referred_by) {
-        const ref = await client.query('SELECT id FROM users WHERE referral_code = $1', [referred_by]);
-        if (ref.rows.length > 0) {
-          await client.query('UPDATE users SET rave_coins = rave_coins + 10 WHERE referral_code = $1', [referred_by]);
-        }
-      }
-  
-      const result = await client.query(`
-        INSERT INTO users (first_name, last_name, email, phone, password, referral_code, referred_by)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
-        RETURNING id
-      `, [first_name, last_name, email, phone, hashedPassword, referralCode, referred_by || null]);
-  
-      const positionRes = await client.query('SELECT COUNT(*) FROM users WHERE id <= $1', [result.rows[0].id]);
-      const position = parseInt(positionRes.rows[0].count, 10);
-  
-      await client.query('UPDATE users SET position = $1 WHERE id = $2', [position, result.rows[0].id]);
-      await client.query('COMMIT');
-  
-      res.status(201).json({ message: 'User created', referral_code: referralCode, position });
-    } catch (err) {
+  body('first_name').notEmpty(),
+  body('last_name').notEmpty(),
+  body('email').isEmail(),
+  body('password').notEmpty(),
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+  const { first_name, last_name, email, phone, password, referred_by } = req.body;
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    const existing = await client.query('SELECT id FROM users WHERE email = $1', [email]);
+    if (existing.rows.length > 0) {
       await client.query('ROLLBACK');
-      console.error('Error creating user:', err.message);
-      res.status(500).json({ error: 'Server error' });
-    } finally {
-      client.release();
+      return res.status(400).json({ error: 'Email already registered' });
     }
-  });
-  
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log('🔐 HASHED PASSWORD:', hashedPassword);
+
+    const referralCode = generateReferralCode();
+
+    if (referred_by) {
+      const ref = await client.query('SELECT id FROM users WHERE referral_code = $1', [referred_by]);
+      if (ref.rows.length > 0) {
+        await client.query('UPDATE users SET rave_coins = rave_coins + 10 WHERE referral_code = $1', [referred_by]);
+      }
+    }
+
+    const result = await client.query(`
+      INSERT INTO users (first_name, last_name, email, phone, password, referral_code, referred_by)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING id
+    `, [first_name, last_name, email, phone, hashedPassword, referralCode, referred_by || null]);
+
+    const positionRes = await client.query('SELECT COUNT(*) FROM users WHERE id <= $1', [result.rows[0].id]);
+    const position = parseInt(positionRes.rows[0].count, 10);
+
+    await client.query('UPDATE users SET position = $1 WHERE id = $2', [position, result.rows[0].id]);
+    await client.query('COMMIT');
+
+    res.status(201).json({ message: 'User created', referral_code: referralCode, position });
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('Error creating user:', err.message);
+    res.status(500).json({ error: 'Server error' });
+  } finally {
+    client.release();
+  }
+});
 
 // User Login
 app.post('/login', async (req, res) => {
@@ -172,7 +168,7 @@ app.post('/login', async (req, res) => {
     }
 
     const user = result.rows[0];
-    const isMatch = await bcrypt.compare(password, user.password); // ✅ HASH COMPARE
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ error: 'Incorrect password' });
 
     res.json({
@@ -189,6 +185,30 @@ app.post('/login', async (req, res) => {
     client.release();
   }
 });
+
+// Get referrer info by referral code
+app.get('/referrer/:code', async (req, res) => {
+    const { code } = req.params;
+    const client = await pool.connect();
+    try {
+      const result = await client.query(
+        'SELECT first_name, last_name FROM users WHERE referral_code = $1',
+        [code]
+      );
+      if (result.rows.length > 0) {
+        const user = result.rows[0];
+        return res.json({ name: `${user.first_name} ${user.last_name}` });
+      } else {
+        return res.status(404).json({ error: 'Referrer not found' });
+      }
+    } catch (err) {
+      console.error('Error fetching referrer:', err.message);
+      res.status(500).json({ error: 'Internal server error' });
+    } finally {
+      client.release();
+    }
+  });
+  
 
 // Admin Dashboard
 app.get('/admin/dashboard', authenticateAdmin, async (req, res) => {
