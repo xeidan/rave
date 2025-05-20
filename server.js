@@ -417,6 +417,23 @@ app.post('/reward/ad-view', async (req, res) => {
   }
 });
 
+app.get('/health', (req, res) => {
+    res.json({
+      status: 'ok',
+      routes: [
+        'GET /',
+        'POST /users',
+        'POST /login',
+        'GET /referrer/:code',
+        'GET /me',
+        'POST /reward/ad-view',
+        'PATCH /users/reset-ads',
+        'POST /admin/login',
+        'GET /admin/dashboard'
+      ]
+    });
+  });
+  
 
 // Health check
 app.get('/', (req, res) => {
