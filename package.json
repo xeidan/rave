@@ -2,10 +2,10 @@
   "name": "rave-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.cjs",
   "scripts": {
     "test": "jest --watchAll",
-    "start": "node server.js"
+    "start": "node server.cjs"
   },
   "keywords": [],
   "author": "",
