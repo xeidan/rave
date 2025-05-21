@@ -348,26 +348,6 @@ app.post('/reward/ad-view', async (req, res) => {
       client.release();
     }
   });
-  
-
-  if (referralCount >= 5 && !refUserRes.rows[0].bonus_awarded) {
-    await client.query('UPDATE users SET rave_coins = rave_coins + 100, bonus_awarded = TRUE WHERE id = $1', [refUserId]);
-  
-    // Email congratulation
-    const refEmailRes = await client.query('SELECT email, first_name FROM users WHERE id = $1', [refUserId]);
-    if (refEmailRes.rows.length > 0) {
-      const { email: refEmail, first_name: refName } = refEmailRes.rows[0];
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: refEmail,
-        subject: '🎉 You earned a referral bonus!',
-        html: `<p>Hi ${refName},</p><p>You've just earned 100 Rave Coins for referring 5 users! Keep sharing your link to earn more.</p>`
-      });
-    }
-  }
-  
-
-  
 
   
   app.post('/reward/ad-view', async (req, res) => {
