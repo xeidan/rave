@@ -450,6 +450,14 @@ app.post('/forgot-password', async (req, res) => {
   }
 });
 
+//RESET LIMITER
+const forgotLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 5, // max 5 requests per 10 min per IP
+  message: { error: 'Too many reset requests. Try again later.' }
+});
+
+
 // RESET PASSWORD ROUTE
 app.post('/reset-password', async (req, res) => {
   const { token, password } = req.body;
