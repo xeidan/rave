@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Earn Rave</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    body { font-family: 'Inter', sans-serif; }
+    .star {
+      background-color: white;
+      border-radius: 50%;
+      position: absolute;
+      animation: twinkling 2s infinite, move 10s infinite;
+    }
+    @keyframes twinkling {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+    @keyframes move {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+    @keyframes logoFadeIn {
+      0% { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    #logoSplash {
+      animation: logoFadeIn 1.5s ease-out forwards;
+    }
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid #00FFFF;
+      border-top: 3px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col items-center relative px-4 overflow-x-hidden overflow-y-auto">
+  <div id="starfield" class="absolute inset-0 z-0 pointer-events-none overflow-hidden"></div>
+  <div class="absolute inset-0 pointer-events-none z-0 bg-gradient-to-br from-transparent to-[#1a1a1a]"></div>
+
+  <div id="splash" class="fixed inset-0 bg-black flex flex-col items-center justify-center z-50">
+    <div class="spinner"></div>
+  </div>
+
+  <nav class="w-full flex justify-between items-center py-4 px-6 z-10 fixed top-0 ">
+    <img class="w-32" src="logo.svg" alt="Rave Logo">
+  </nav>
+
+  <div class="pt-32 flex justify-center">
+    <div class="w-32 h-32 flex items-center justify-center duration-1000 ease-out" data-animate="fade-in-up" data-delay="300">
+      <img src="holl.png" alt="" data-animate="fade-in-up" data-delay="100">
+    </div>
+  </div>
+
+  <div class="text-center mt-8 z-10" data-animate="fade-in-up" data-delay="400">
+    <h1 class="text-6xl md:text-6xl lg:text-7xl font-semibold flex flex-wrap justify-center whitespace-nowrap">
+      <span class="bg-gradient-to-r from-[#00FFFF] to-blue-600 text-transparent bg-clip-text p-2">AI-Powered</span>
+      <span class="bg-gradient-to-b from-gray-600 to-white text-transparent bg-clip-text p-2">Staking!</span>
+    </h1>
+    <p class="text-md text-gray-300 max-w-lg mx-auto py-6">
+      Grow Your Assets with AI-Driven Precision. Smart, Secure, and Profitable.
+    </p>
+  </div>
+
+  <div class="mt-6 space-y-4 w-full max-w-xs z-10 mb-16" data-animate="fade-in-up" data-delay="500">
+    <a href="join.html" class="w-full block text-center bg-gradient-to-r from-[#00FFFF] to-blue-600 hover:opacity-90 text-white px-4 py-3 rounded-md transition">Join Waitlist</a>
+    <a href="sign-in.html" class="w-full block text-center bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 text-white px-4 py-3 rounded-md transition">Sign In</a>
+  </div>
+
+  <div class="z-10 relative w-full max-w-4xl mx-auto my-10 px-6">
+    <h1 class="text-5xl md:text-6xl font-normal mb-4 bg-gradient-to-b from-gray-600 to-white text-transparent bg-clip-text text-center py-4" data-animate="fade-in-up" data-delay="200">Why Rave?</h1>
+    <p class="text-gray-400 text-md md:text-lg font-thin leading-relaxed text-center" data-animate="fade-in-up" data-delay="300">
+      Rave is a cutting-edge platform leveraging AI technology to grow assets staked by users.
+      Our proprietary token is set to launch soon, offering new opportunities for growth and profitability.
+    </p>
+  </div>
+
+  <div class="z-10 relative px-6 max-w-6xl w-full mt-8 grid grid-cols-1 md:grid-cols-3 gap-6" data-animate="fade-in-up">
+    <div class="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col gap-4" data-animate="fade-in-up" data-delay="300">
+      <div class="h-40 rounded-xl flex items-center justify-center text-gray-400 text-sm py-24">
+        <img src="ai-power.svg" alt="">
+      </div>
+      <h2 class="text-xl font-semibold">AI-Powered Growth</h2>
+      <p class="text-gray-300 text-md font-thin">
+        Our advanced AI analyzes market data in-time, continuously optimizing your staked funds for consistent growth.
+      </p>
+    </div>
+    <div class="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col gap-4" data-animate="fade-in-up" data-delay="400">
+      <div class="h-40 rounded-xl flex items-center justify-center text-gray-400 text-sm py-24">
+        <img src="secure.svg" alt="">
+      </div>
+      <h2 class="text-xl font-semibold">Secure & Transparent</h2>
+      <p class="text-gray-300 text-md font-thin">
+        We prioritize your trust with top-tier security and a transparent approach, keeping you in control of your investments at all times.
+      </p>
+    </div>
+    <div class="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col gap-4" data-animate="fade-in-up" data-delay="400">
+      <div class="h-40 rounded-xl flex items-center justify-center text-gray-400 text-sm py-24">
+        <img src="atm.svg" alt="">
+      </div>
+      <h2 class="text-xl font-semibold">Innovative Token</h2>
+      <p class="text-gray-300 text-md font-thin">
+        Rave is not just about fund growth — we're introducing our very own Rave Token, giving you even more potential for growth when you stake with us.
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-12 space-y-4 w-full max-w-xs z-10 mb-16" data-animate="fade-in-up" data-delay="500">
+    <a href="join.html" class="w-full block text-center bg-gradient-to-r from-[#00FFFF] to-blue-600 hover:opacity-90 text-white px-4 py-3 rounded-md transition">Join Waitlist</a>
+    <a href="sign-in.html" class="w-full block text-center bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 text-white px-4 py-3 rounded-md transition">Sign In</a>
+  </div>
+
+  <footer class="z-10 w-full text-center py-10 mt-auto border-t border-white/10">
+    <div class="flex justify-center space-x-4 mb-4">
+      <a href="#" class="text-gray-400 hover:text-white">Twitter</a>
+      <a href="#" class="text-gray-400 hover:text-white">Instagram</a>
+      <a href="#" class="text-gray-400 hover:text-white">Telegram</a>
+    </div>
+    <p class="text-gray-500 text-sm">&copy; 2025 EarnRave. All rights reserved.</p>
+  </footer>
+
+  <script>
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('splash').style.display = 'none';
+      }, 2000);
+    });
+
+    const container = document.getElementById('starfield');
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      const size = Math.random() * 2 + 1;
+      star.className = 'star';
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.animationDuration = `${1.5 + Math.random() * 2}s, ${15 + Math.random() * 10}s`;
+      container.appendChild(star);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const animatedElements = document.querySelectorAll('[data-animate]');
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            el.style.transition = 'opacity 1000ms ease-out, transform 1000ms ease-out';
+            el.style.opacity = 1;
+            el.style.transform = 'translateY(0)';
+            observer.unobserve(el);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      animatedElements.forEach(el => {
+        el.style.opacity = 0;
+        el.style.transform = 'translateY(20px)';
+        observer.observe(el);
+      });
+    });
+  </script>
+</body>
+</html>
