@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Earn Rave</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      font-family: 'Inter', sans-serif;
+      background: black;
+      color: white;
+    }
+    .star {
+      background-color: white;
+      border-radius: 50%;
+      position: absolute;
+      animation: twinkling 2s infinite, move 10s infinite;
+    }
+    @keyframes twinkling {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+    @keyframes move {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(30px, 30px); }
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="starfield" class="absolute inset-0 z-0 pointer-events-none overflow-hidden"></div>
+  <div class="absolute inset-0 pointer-events-none z-0 bg-gradient-to-br from-transparent to-[#1a1a1a]"></div>
+
+  <nav class="w-full flex justify-between items-center py-4 px-6 z-10 relative">
+    <img class="w-32" src="logo.svg" alt="Rave Logo">
+  </nav>
+
+  <main class="pt-28 px-6 max-w-5xl mx-auto z-10 relative text-center">
+    <div class="w-28 h-28 mx-auto mb-6 fade-in">
+      <img src="holl.png" alt="Earn with Rave">
+    </div>
+    <h1 class="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-[#00FFFF] to-blue-600 text-transparent bg-clip-text fade-in">Earn Rave Coins Daily</h1>
+    <p class="text-gray-300 text-lg mt-4 mb-12 fade-in">Complete tasks below to earn coins instantly.</p>
+
+    <div id="rewardNotice" class="text-green-400 font-bold text-xl mb-6 hidden fade-in">+10 RAVE Coins!</div>
+    <section class="grid md:grid-cols-3 gap-6 fade-in" id="earnTasks">
+      <!-- Tasks will be populated dynamically -->
+    </section>
+
+    <div class="mt-14 bg-white/5 border border-white/10 rounded-xl p-6 max-w-2xl mx-auto fade-in">
+      <h3 class="text-xl font-semibold mb-4">Want to Multiply Your Earnings?</h3>
+      <p class="text-gray-300 text-sm mb-4">Premium users earn 2x coins on every task and enjoy exclusive bonuses.</p>
+      <a href="premium.html" class="inline-block bg-gradient-to-r from-[#00FFFF] to-blue-600 text-white px-6 py-3 rounded-md hover:opacity-90 transition">Upgrade to Premium</a>
+    </div>
+
+  </main>
+
+  <footer class="z-10 w-full text-center py-10 mt-24 border-t border-white/10">
+    <div class="flex justify-center space-x-6 mb-4">
+      <a href="#" class="text-gray-400 hover:text-white">Twitter</a>
+      <a href="#" class="text-gray-400 hover:text-white">Instagram</a>
+      <a href="#" class="text-gray-400 hover:text-white">Telegram</a>
+    </div>
+    <p class="text-gray-500 text-sm">&copy; 2025 EarnRave. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const container = document.getElementById('starfield');
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      const size = Math.random() * 2 + 1;
+      star.className = 'star';
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.animationDuration = `${1.5 + Math.random() * 2}s, ${15 + Math.random() * 10}s`;
+      container.appendChild(star);
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email');
+
+    if (!email) {
+      alert('Email missing in URL');
+    } else {
+      fetch(`https://pure-sea-47438-9b41a08c5720.herokuapp.com/earn-tasks?email=${encodeURIComponent(email)}`)
+        .then(res => res.json())
+        .then(data => {
+          const taskContainer = document.getElementById('earnTasks');
+          data.tasks.forEach(task => {
+            const div = document.createElement('div');
+            div.className = "bg-white/5 border border-white/10 p-6 rounded-xl transition transform duration-500 hover:scale-105";
+            div.innerHTML = `
+              <h2 class="text-xl font-semibold mb-2">${task.icon} ${task.title}</h2>
+              <p class="text-sm text-gray-300">${task.description}</p>
+              <button class="mt-4 bg-gradient-to-r from-[#00FFFF] to-blue-600 text-white px-4 py-2 rounded hover:opacity-90 transition" onclick="completeTask('${task.id}', this)">${task.action}</button>
+            `;
+            taskContainer.appendChild(div);
+          });
+        })
+        .catch(err => console.error('Error loading tasks:', err));
+    }
+
+    function completeTask(taskId, button) {
+      fetch(`https://pure-sea-47438-9b41a08c5720.herokuapp.com/complete-task`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ taskId, email })
+      })
+        .then(res => res.json())
+        .then(result => {
+          if (result.success) {
+            button.textContent = 'Completed';
+            button.disabled = true;
+            button.classList.add('opacity-50', 'cursor-not-allowed');
+            const reward = document.getElementById('rewardNotice');
+            reward.textContent = `+${result.reward} RAVE Coins!`;
+            reward.classList.remove('hidden');
+            reward.classList.add('animate-pulse');
+            setTimeout(() => reward.classList.add('hidden'), 3000);
+          } else {
+            alert('Task completion failed: ' + result.message);
+          }
+        })
+        .catch(err => {
+          console.error('Error completing task:', err);
+          alert('Task completion failed.');
+        });
+    }
+  </script>
+</body>
+</html>
+

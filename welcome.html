@@ -7,63 +7,42 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="input.css">
   <style>
-  
-    html, body {
-      height: 100%; /* Critical for flexbox to properly calculate heights */
-      overflow-x: hidden; /* Prevent horizontal scrolling */
-      overscroll-behavior-y: none; /* Prevent vertical overscroll bounce */
-      margin: 0;
-      padding: 0;
+    body {
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
     }
-
-    /* Starfield remains full viewport height */
-    #starfield {
-      height: 100vh;
-      overflow: hidden;
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
-
     .star {
       background-color: white;
       border-radius: 50%;
       position: absolute;
       animation: twinkling 2s infinite, move 10s infinite;
-      pointer-events: none;
     }
-
     @keyframes twinkling {
       0% { opacity: 0.6; }
       50% { opacity: 1; }
       100% { opacity: 0.6; }
     }
-
     @keyframes move {
       0% { transform: translate(0, 0); }
       100% { transform: translate(30px, 30px); }
     }
   </style>
 </head>
-<body class="bg-black text-white min-h-screen relative flex flex-col overflow-x-hidden overflow-y-auto z-0">
-  <div class="absolute inset-0 -z-10">
-    <div id="starfield" class="w-full h-full pointer-events-none"></div>
-    <div class="absolute inset-0 bg-gradient-to-br from-transparent to-[#1a1a1a] pointer-events-none"></div>
-  </div>
-  
+<body class="bg-black text-white min-h-screen flex flex-col items-center justify-start relative px-4 overflow-x-hidden overflow-y-hidden">
+  <div id="starfield" class="absolute inset-0 z-0 pointer-events-none"></div>
+  <div class="absolute inset-0 pointer-events-none z-0 bg-gradient-to-br from-transparent to-[#1a1a1a]"></div>
 
-  <nav class="px-4 py-4 w-full flex justify-between items-center z-10 relative">
+  <nav class="fixed top-0 left-0 right-0 py-4 px-6 w-full flex justify-between items-center z-20 ">
     <img class="w-32" src="logo.svg" alt="Rave Logo">
     <a href="index.html" class="bg-white/5 border border-white/10 px-3 py-1.5 text-sm rounded-md hover:bg-white/10 transition">Back</a>
   </nav>
 
-  <main class="flex-grow flex flex-col items-center justify-center px-6 py-8 z-10 overflow-y-auto">
+  <div class="md:flex-grow flex flex-col items-center justify-center px-6 py-8 z-10">
     <div class="w-32 h-32 flex items-center justify-center duration-1000 ease-out mb-6" data-animate="fade-in-up" data-delay="100">
       <img src="holl.png" alt="">
     </div>
 
-    <div class="flex flex-col md:flex-row justify-center items-start gap-8 max-w-4xl w-full">
+    <div class="flex flex-col md:flex-row justify-center items-start gap-8 max-w-4xl w-full">  
       <div class="md:w-1/2 text-left">
         <h1 id="positionTitle" class="text-5xl md:text-6xl font-normal mb-4 bg-gradient-to-b from-gray-600 to-white text-transparent bg-clip-text"
         data-animate="fade-in-up" data-delay="200"></h1>
@@ -89,7 +68,7 @@
         <p class="text-gray-200 mb-4 font-thin">The more you share, the more you can earn.</p>
       </div>
     </div>
-  </main>
+  </div>
 
   <footer class="z-10 w-full text-center py-10 mt-auto border-t border-white/10">
     <div class="flex justify-center space-x-4 mb-4">
@@ -115,7 +94,7 @@
       container.appendChild(star);
     }
 
-    document.getElementById('copyButton').addEventListener('click', function () {
+    document.getElementById('copyButton').addEventListener('click', function() {
       const referralLinkInput = document.getElementById('referralLink');
       referralLinkInput.select();
       referralLinkInput.setSelectionRange(0, 99999);
@@ -137,22 +116,21 @@
       document.getElementById('referralLink').value = `https://earnrave.com/?ref=${code}`;
 
       const animatedElements = document.querySelectorAll('[data-animate]');
-      animatedElements.forEach(el => {
-        el.classList.add('opacity-0', 'translate-y-4', 'transition-all', 'duration-1000', 'ease-out');
-      });
-
       const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const el = entry.target;
-            el.classList.remove('opacity-0', 'translate-y-4');
-            el.classList.add('opacity-100', 'translate-y-0');
+            el.style.transition = 'opacity 1000ms ease-out, transform 1000ms ease-out';
+            el.style.opacity = 1;
+            el.style.transform = 'translateY(0)';
             observer.unobserve(el);
           }
         });
       }, { threshold: 0.1 });
 
       animatedElements.forEach(el => {
+        el.style.opacity = 0;
+        el.style.transform = 'translateY(20px)';
         observer.observe(el);
       });
     });

@@ -162,7 +162,7 @@
         const result = await res.json();
 
         if (res.ok) {
-          window.location.href = `waitlist.html?code=${result.referral_code}&position=${result.position}`;
+          window.location.href = `welcome.html?code=${result.referral_code}&position=${result.position}`;
         } else {
           alert(result?.errors?.[0]?.msg || result.error || 'Something went wrong.');
         }

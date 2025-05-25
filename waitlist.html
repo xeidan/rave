@@ -2,14 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Waitlist Success</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EarnRave Waitlist</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="input.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
     body {
       font-family: 'Inter', sans-serif;
       overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+      background-color: #000;
     }
     .star {
       background-color: white;
@@ -24,54 +30,73 @@
     }
     @keyframes move {
       0% { transform: translate(0, 0); }
-      100% { transform: translate(30px, 30px); }
+      100% { transform: translate(50px, 50px); }
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
-<body class="bg-black text-white min-h-screen flex flex-col items-center justify-start relative px-4 overflow-x-hidden overflow-y-hidden">
-  <div id="starfield" class="absolute inset-0 z-0 pointer-events-none"></div>
+<body class="text-white min-h-screen flex flex-col items-center relative px-4">
+  <div id="starfield" class="absolute inset-0 z-0 pointer-events-none overflow-hidden"></div>
   <div class="absolute inset-0 pointer-events-none z-0 bg-gradient-to-br from-transparent to-[#1a1a1a]"></div>
 
-  <nav class="fixed top-0 left-0 right-0 py-4 px-6 w-full flex justify-between items-center z-20 ">
+  <nav class="w-full flex justify-between items-center py-4 px-6 z-10 fixed top-0 ">
     <img class="w-32" src="logo.svg" alt="Rave Logo">
-    <a href="index.html" class="bg-white/5 border border-white/10 px-3 py-1.5 text-sm rounded-md hover:bg-white/10 transition">Back</a>
+    <a href="index.html" class="border border-white/20 hover:border-white/50 text-white px-4 py-2 rounded-md transition bg-transparent">Go to Main Site</a>
   </nav>
 
-  <div class="md:flex-grow flex flex-col items-center justify-center px-6 py-8 z-10">
-    <div class="w-32 h-32 flex items-center justify-center duration-1000 ease-out mb-6" data-animate="fade-in-up" data-delay="100">
-      <img src="holl.png" alt="">
-    </div>
-
-    <div class="flex flex-col md:flex-row justify-center items-start gap-8 max-w-4xl w-full">  
-      <div class="md:w-1/2 text-left">
-        <h1 id="positionTitle" class="text-5xl md:text-6xl font-normal mb-4 bg-gradient-to-b from-gray-600 to-white text-transparent bg-clip-text"
-        data-animate="fade-in-up" data-delay="200"></h1>
-        <p class="text-gray-300 text-lg md:text-lg font-thin leading-relaxed" data-animate="fade-in-up" data-delay="300">Thank you for joining the waitlist.</p>
-        <p class="text-gray-300 text-lg md:text-lg font-thin leading-relaxed" data-animate="fade-in-up" data-delay="300">You'll be the first to know when we launch. <span class="text-yellow-400">🎉</span></p>
-        <p class="text-gray-300 text-lg md:text-lg font-thin leading-relaxed" data-animate="fade-in-up" data-delay="300">Keep an eye on your inbox for updates on our launch date.</p>
-      </div>
-
-      <div class="md:w-1/2 bg-white/5 border border-white/10 rounded-2xl p-6 text-left">
-        <h2 class="text-xl mb-4 font-thin">Want to move up the waitlist to get early access and earn rewards?</h2>
-        <p class="text-gray-200 mb-4 font-thin">Invite your friends to join the waitlist too.</p>
-
-        <div class="flex items-center justify-between mb-4">
-          <p class="text-gray-200 font-thin">Refer friends for a big jump and earn</p>
-          <span class="text-blue-500">0/5</span>
-        </div>
-
-        <div class="flex items-center justify-between mb-4 font-light text-gray-100">
-          <input type="text" id="referralLink" value="" class="bg-transparent border border-white/10 rounded-md px-4 py-2 text-white w-3/4" readonly>
-          <button id="copyButton" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-md text-white">Copy</button>
-        </div>
-
-        <p class="text-gray-200 mb-4 font-thin">The more you share, the more you can earn.</p>
-      </div>
+  <div class="pt-32 flex justify-center">
+    <div class="w-32 h-32 flex items-center justify-center duration-1000 ease-out" data-animate="fade-in-up" data-delay="300">
+      <img src="holl.png" alt="" data-animate="fade-in-up" data-delay="100">
     </div>
   </div>
 
-  <footer class="z-10 w-full text-center py-10 mt-auto border-t border-white/10">
-    <div class="flex justify-center space-x-4 mb-4">
+  <section class="pt-10 text-center max-w-3xl mx-auto fade-in">
+    <h1 class="text-6xl md:text-7xl font-extrabold bg-gradient-to-r from-[#00FFFF] to-blue-600 text-transparent bg-clip-text mb-6">Earn Cash While You Wait</h1>
+    <p class="text-xl text-gray-300 mb-4">Refer friends, watch ads, click links, take surveys, and earn RAVE Coins — instantly convertible to cash.</p>
+    <p class="text-lg text-yellow-400 font-medium">1 RAVE Coin = ₦1</p>
+    <div class="mt-8 space-y-4 w-full max-w-xs mx-auto">
+      <a href="join.html" class="block text-center bg-gradient-to-r from-[#00FFFF] to-blue-600 hover:opacity-90 text-white px-5 py-3 rounded-md shadow-lg transition">Join the Waitlist</a>
+      <a href="sign-in.html" class="block text-center bg-white/5 hover:bg-white/10 border border-white/10 text-white px-5 py-3 rounded-md transition">Sign In</a>
+    </div>
+  </section>
+
+  <section class="mt-20 px-6 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl w-full">
+    <div class="fade-in bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+      <h2 class="text-2xl font-semibold mb-3">💬 Refer & Earn</h2>
+      <p class="text-gray-300">Invite friends, earn 10 RAVE Coins per referral. Unlock a 100-coin bonus after 5 invites.</p>
+    </div>
+    <div class="fade-in bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+      <h2 class="text-2xl font-semibold mb-3">🎥 Watch Ads</h2>
+      <p class="text-gray-300">Watch 3 short ads daily and earn up to 50 RAVE Coins instantly.</p>
+    </div>
+    <div class="fade-in bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+      <h2 class="text-2xl font-semibold mb-3">📩 Click & Earn</h2>
+      <p class="text-gray-300">Click on discount links or promotions and earn micro-rewards each time.</p>
+    </div>
+    <div class="fade-in bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+      <h2 class="text-2xl font-semibold mb-3">🧠 Take Surveys</h2>
+      <p class="text-gray-300">Get paid to share your opinion. Take verified brand surveys from our partners.</p>
+    </div>
+    <div class="fade-in bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+      <h2 class="text-2xl font-semibold mb-3">🔁 Daily Login</h2>
+      <p class="text-gray-300">Earn 5 Coins just for showing up. No tasks needed, just log in daily.</p>
+    </div>
+    <div class="fade-in bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+      <h2 class="text-2xl font-semibold mb-3">🚀 Premium Boost</h2>
+      <p class="text-gray-300">Upgrade to Premium, earn 2x rewards and get 80% cashback on upgrade fees.</p>
+    </div>
+  </section>
+
+  <footer class="z-10 w-full text-center py-12 mt-24 border-t border-white/10">
+    <div class="flex justify-center space-x-6 mb-4">
       <a href="#" class="text-gray-400 hover:text-white">Twitter</a>
       <a href="#" class="text-gray-400 hover:text-white">Instagram</a>
       <a href="#" class="text-gray-400 hover:text-white">Telegram</a>
@@ -81,59 +106,28 @@
 
   <script>
     const container = document.getElementById('starfield');
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 120; i++) {
       const star = document.createElement('div');
       const size = Math.random() * 2 + 1;
       star.className = 'star';
       star.style.width = `${size}px`;
       star.style.height = `${size}px`;
-      star.style.top = `${Math.random() * 95}%`;
+      star.style.top = `${Math.random() * 100}%`;
       star.style.left = `${Math.random() * 100}%`;
       star.style.animationDuration = `${1.5 + Math.random() * 2}s, ${15 + Math.random() * 10}s`;
-      star.style.animationDelay = `${Math.random() * 5}s, ${Math.random() * 10}s`;
       container.appendChild(star);
     }
 
-    document.getElementById('copyButton').addEventListener('click', function() {
-      const referralLinkInput = document.getElementById('referralLink');
-      referralLinkInput.select();
-      referralLinkInput.setSelectionRange(0, 99999);
-      document.execCommand('copy');
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get('code');
-      const position = urlParams.get('position');
-      const name = urlParams.get('name') || 'to EarnRave';
-
-      if (!code || !position) {
-        window.location.href = 'index.html';
-        return;
-      }
-
-      document.getElementById('positionTitle').textContent = `Welcome ${decodeURIComponent(name)}`;
-      document.getElementById('referralLink').value = `https://earnrave.com/?ref=${code}`;
-
-      const animatedElements = document.querySelectorAll('[data-animate]');
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const el = entry.target;
-            el.style.transition = 'opacity 1000ms ease-out, transform 1000ms ease-out';
-            el.style.opacity = 1;
-            el.style.transform = 'translateY(0)';
-            observer.unobserve(el);
-          }
-        });
-      }, { threshold: 0.1 });
-
-      animatedElements.forEach(el => {
-        el.style.opacity = 0;
-        el.style.transform = 'translateY(20px)';
-        observer.observe(el);
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
       });
-    });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   </script>
 </body>
 </html>

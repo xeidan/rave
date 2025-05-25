@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premium</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #000;
+      color: white;
+    }
+    .star {
+      background-color: white;
+      border-radius: 50%;
+      position: absolute;
+      animation: twinkling 2s infinite, move 10s infinite;
+    }
+    @keyframes twinkling {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+    @keyframes move {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+    .selected-plan {
+      background: linear-gradient(to right, #00FFFF, #2563EB);
+      color: white;
+    }
+    .unselected-plan {
+      background: white;
+      color: black;
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="relative min-h-screen md:px-4">
+  <div id="starfield" class="absolute inset-0 z-0 pointer-events-none overflow-hidden"></div>
+  <div class="absolute inset-0 pointer-events-none z-0 bg-gradient-to-br from-transparent to-[#1a1a1a]"></div>
+
+  <nav class="w-full flex justify-between items-center py-4 px-6 z-10 relative">
+    <img class="w-32" src="logo.svg" alt="Rave Logo">
+    <a id="returnLink" href="#" class="text-sm border border-white/10 rounded px-4 py-2 hover:bg-white/10 transition">Return to Dashboard</a>
+  </nav>
+
+  <div class="pt-24 text-center z-10 relative">
+    <div class="w-32 h-32 mx-auto mb-6 fade-in">
+      <img src="holl.png" alt="">
+    </div>
+    <h1 class="text-5xl md:text-6xl font-bold bg-gradient-to-b from-white to-black text-transparent bg-clip-text mb-6 fade-in">Premium</h1>
+    <div class="flex justify-center gap-2 mb-8 fade-in">
+      <button id="freeBtn" class="unselected-plan font-semibold px-6 py-2 rounded-md">Free</button>
+      <button id="premiumBtn" class="selected-plan font-semibold px-6 py-2 rounded-md">Premium</button>
+    </div>
+
+    <div id="premiumContent" class="flex-col items-center gap-6 mb-10 px-4 fade-in hidden">
+      <div class="bg-gradient-to-b from-[#1e1e1e] to-[#111] p-6 rounded-2xl border border-white/10 w-full max-w-sm mb-8">
+        <h2 class="text-xl font-bold mb-1">One-Time Payment</h2>
+        <p class="text-white text-2xl font-semibold">₦5,000.00</p>
+      </div>
+
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6 max-w-2xl w-full mb-8">
+        <h2 class="text-xl font-semibold mb-4 text-left">What You Get from Premium:</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+            <h3 class="text-white font-medium">⚡ 2x Daily Login Rewards</h3>
+            <p class="text-sm text-gray-400">Earn double rewards every day by logging in.</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+            <h3 class="text-white font-medium">📈 Increased Earnings</h3>
+            <p class="text-sm text-gray-400">Watch more ads, complete surveys, and earn more per task.</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+            <h3 class="text-white font-medium">💸 80% Cashback</h3>
+            <p class="text-sm text-gray-400">Get rewarded back for your Premium fee when you complete milestones.</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+            <h3 class="text-white font-medium">🎁 Bonus Tasks</h3>
+            <p class="text-sm text-gray-400">Access exclusive surveys and high-reward offers.</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+            <h3 class="text-white font-medium">🚀 Priority Support</h3>
+            <p class="text-sm text-gray-400">Enjoy faster withdrawals and top-tier support.</p>
+          </div>
+        </div>
+      </div>
+
+      <a href="payment.html" class="mt-6 px-8 py-3 text-lg font-semibold text-white bg-gradient-to-r from-[#00FFFF] to-blue-600 rounded-md shadow-md hover:opacity-90 transition">Get Premium Now</a>
+    </div>
+
+    <div id="freeContent" class="flex-col items-center gap-6 mb-10 px-4 fade-in">
+      <div class="bg-gradient-to-b from-[#1e1e1e] to-[#111] p-6 rounded-2xl border border-white/10 w-full max-w-sm mb-8">
+        <h2 class="text-xl font-bold mb-1">Free Plan</h2>
+        <p class="text-white text-2xl font-semibold">₦0.00</p>
+      </div>
+
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6 max-w-2xl w-full mb-12">
+        <h2 class="text-xl font-semibold mb-4 text-left">Current Benefits:</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+            <h3 class="text-white font-medium">💬 Refer & Earn</h3>
+            <p class="text-sm text-gray-400">Earn 10 RAVE Coins per referral.</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+            <h3 class="text-white font-medium">🎥 Watch Ads</h3>
+            <p class="text-sm text-gray-400">Watch 3 ads daily and earn up to 50 RAVE Coins.</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+            <h3 class="text-white font-medium">📩 Click Links</h3>
+            <p class="text-sm text-gray-400">Earn small rewards by exploring offers.</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+            <h3 class="text-white font-medium">🧠 Take Surveys</h3>
+            <p class="text-sm text-gray-400">Get paid for your opinions on various topics.</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+            <h3 class="text-white font-medium">🔁 Daily Login</h3>
+            <p class="text-sm text-gray-400">Earn 5 Coins daily for just logging in.</p>
+          </div>
+        </div>
+      </div>
+
+      <button onclick="premiumBtn.click()" class="mt-6 px-8 py-3 text-lg font-semibold text-white bg-gradient-to-r from-[#00FFFF] to-blue-600 rounded-md shadow-md hover:opacity-90 transition">Get Premium</button>
+    </div>
+  </div>
+
+  <footer class="z-10 w-full text-center py-10 mt-24 border-t border-white/10">
+    <div class="flex justify-center space-x-6 mb-4">
+      <a href="#" class="text-gray-400 hover:text-white">Twitter</a>
+      <a href="#" class="text-gray-400 hover:text-white">Instagram</a>
+      <a href="#" class="text-gray-400 hover:text-white">Telegram</a>
+    </div>
+    <p class="text-gray-500 text-sm">&copy; 2025 EarnRave. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const container = document.getElementById('starfield');
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      const size = Math.random() * 2 + 1;
+      star.className = 'star';
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.animationDuration = `${1.5 + Math.random() * 2}s, ${15 + Math.random() * 10}s`;
+      container.appendChild(star);
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    const freeBtn = document.getElementById('freeBtn');
+    const premiumBtn = document.getElementById('premiumBtn');
+    const freeContent = document.getElementById('freeContent');
+    const premiumContent = document.getElementById('premiumContent');
+
+    freeBtn.addEventListener('click', () => {
+      freeBtn.classList.replace('unselected-plan', 'selected-plan');
+      premiumBtn.classList.replace('selected-plan', 'unselected-plan');
+      freeContent.classList.remove('hidden');
+      premiumContent.classList.add('hidden');
+    });
+
+    premiumBtn.addEventListener('click', () => {
+      premiumBtn.classList.replace('unselected-plan', 'selected-plan');
+      freeBtn.classList.replace('selected-plan', 'unselected-plan');
+      premiumContent.classList.remove('hidden');
+      freeContent.classList.add('hidden');
+    });
+
+    // Fix email handling in return button with fallback
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const email = urlParams.get('email');
+      const returnLink = document.getElementById('returnLink');
+      if (email) {
+        returnLink.href = `dashboard.html?email=${encodeURIComponent(email)}`;
+      } else {
+        returnLink.href = `sign-in.html`;
+      }
+    });
+  </script>
+</body>
+</html>
