@@ -85,12 +85,12 @@
       star.style.animationDuration = `${1.5 + Math.random() * 2}s, ${15 + Math.random() * 10}s`;
       container.appendChild(star);
     }
-
+  
     async function populateCountryCodes() {
       const res = await fetch('https://restcountries.com/v3.1/all');
       const countries = await res.json();
       const select = document.getElementById('countryCode');
-
+  
       const sorted = countries
         .map(c => {
           const code = c.idd?.root && c.idd.suffixes ? `${c.idd.root}${c.idd.suffixes[0]}` : null;
@@ -98,16 +98,16 @@
         })
         .filter(Boolean)
         .sort((a, b) => a.name.localeCompare(b.name));
-
+  
       select.innerHTML = sorted.map(c => `<option value="${c.code}">${c.name} (${c.code})</option>`).join('');
-
+  
       const userCountry = await fetch('https://ipapi.co/json').then(res => res.json()).catch(() => null);
       if (userCountry && userCountry.country_calling_code) {
         select.value = userCountry.country_calling_code;
       }
     }
     populateCountryCodes();
-
+  
     document.getElementById('togglePassword').addEventListener('click', () => {
       const passwordInput = document.getElementById('password');
       const toggleButton = document.getElementById('togglePassword');
@@ -119,8 +119,17 @@
         toggleButton.textContent = 'Show';
       }
     });
-
+  
     document.addEventListener('DOMContentLoaded', function () {
+      // Autofill referred_by if ?ref= is in the URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const refCode = urlParams.get('ref');
+      if (refCode) {
+        const referredByInput = document.getElementById('referredBy');
+        referredByInput.value = refCode;
+        referredByInput.readOnly = true; // optional
+      }
+  
       const animatedElements = document.querySelectorAll('[data-animate]');
       const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
@@ -133,14 +142,14 @@
           }
         });
       }, { threshold: 0.1 });
-
+  
       animatedElements.forEach(el => {
         el.style.opacity = 0;
         el.style.transform = 'translateY(20px)';
         observer.observe(el);
       });
     });
-
+  
     document.getElementById('joinForm').addEventListener('submit', async function (e) {
       e.preventDefault();
       const data = {
@@ -151,18 +160,18 @@
         password: document.getElementById('password').value,
         referred_by: document.getElementById('referredBy').value.trim() || null
       };
-
+  
       try {
         const res = await fetch('https://pure-sea-47438-9b41a08c5720.herokuapp.com/users', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
-
+  
         const result = await res.json();
-
+  
         if (res.ok) {
-          window.location.href = `welcome.html?code=${result.referral_code}&position=${result.position}`;
+          window.location.href = `welcome.html?code=${result.referral_code}&position=${result.position}&name=${encodeURIComponent(data.first_name)}`;
         } else {
           alert(result?.errors?.[0]?.msg || result.error || 'Something went wrong.');
         }
@@ -171,6 +180,6 @@
         alert('Network error or server issue. Please try again later.');
       }
     });
-  </script>
+  </script>  
 </body>
 </html>
