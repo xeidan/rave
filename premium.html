@@ -72,7 +72,8 @@
       <button id="premiumBtn" class="selected-plan font-semibold px-6 py-2 rounded-md">Premium</button>
     </div>
 
-    <div id="premiumContent" class="flex-col items-center gap-6 mb-10 px-4 fade-in hidden">
+    <div class="flex justify-center w-full">
+    <div id="premiumContent" class="flex flex-col items-center gap-6 mb-10 px-4 fade-in hidden">      
       <div class="bg-gradient-to-b from-[#1e1e1e] to-[#111] p-6 rounded-2xl border border-white/10 w-full max-w-sm mb-8">
         <h2 class="text-xl font-bold mb-1">One-Time Payment</h2>
         <p class="text-white text-2xl font-semibold">₦5,000.00</p>
@@ -103,11 +104,14 @@
           </div>
         </div>
       </div>
+    
 
       <a href="payment.html" class="mt-6 px-8 py-3 text-lg font-semibold text-white bg-gradient-to-r from-[#00FFFF] to-blue-600 rounded-md shadow-md hover:opacity-90 transition">Get Premium Now</a>
     </div>
+</div>
 
-    <div id="freeContent" class="flex-col items-center gap-6 mb-10 px-4 fade-in">
+    <div class="flex justify-center w-full">
+        <div id="freeContent" class="flex flex-col items-center gap-6 mb-10 px-4 fade-in">
       <div class="bg-gradient-to-b from-[#1e1e1e] to-[#111] p-6 rounded-2xl border border-white/10 w-full max-w-sm mb-8">
         <h2 class="text-xl font-bold mb-1">Free Plan</h2>
         <p class="text-white text-2xl font-semibold">₦0.00</p>
@@ -138,10 +142,12 @@
           </div>
         </div>
       </div>
+   
 
       <button onclick="premiumBtn.click()" class="mt-6 px-8 py-3 text-lg font-semibold text-white bg-gradient-to-r from-[#00FFFF] to-blue-600 rounded-md shadow-md hover:opacity-90 transition">Get Premium</button>
     </div>
   </div>
+</div>
 
   <footer class="z-10 w-full text-center py-10 mt-24 border-t border-white/10">
     <div class="flex justify-center space-x-6 mb-4">
