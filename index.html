@@ -154,6 +154,14 @@
       container.appendChild(star);
     }
 
+    document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+    if (ref) {
+      window.location.href = `join.html?ref=${encodeURIComponent(ref)}`;
+    }
+  });
+
     document.addEventListener('DOMContentLoaded', function () {
       const animatedElements = document.querySelectorAll('[data-animate]');
       const observer = new IntersectionObserver(entries => {

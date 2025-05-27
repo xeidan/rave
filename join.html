@@ -149,6 +149,12 @@
         observer.observe(el);
       });
     });
+
+    const ref = new URLSearchParams(window.location.search).get('ref');
+    if (ref) {
+      document.getElementById('referredBy').value = ref;
+    }
+
   
     document.getElementById('joinForm').addEventListener('submit', async function (e) {
       e.preventDefault();
