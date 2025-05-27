@@ -136,7 +136,10 @@
   </footer>
 
   <script>
-    
+    const ref = new URLSearchParams(window.location.search).get('ref');
+    if (ref) {
+     window.location.href = `join.html?ref=${encodeURIComponent(ref)}`;
+    }
     window.addEventListener('load', () => {
       setTimeout(() => {
         document.getElementById('splash').style.display = 'none';
