@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Top Referrers</title>
+  <title>Admin Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -25,31 +25,24 @@
     }
   </style>
 </head>
-<body class="bg-black text-white min-h-screen flex flex-col items-center px-4 relative">
+<body class="bg-black text-white min-h-screen px-6 py-4 relative">
   <div id="starfield" class="absolute inset-0 z-0 pointer-events-none overflow-hidden"></div>
-  <div class="absolute inset-0 bg-gradient-to-br from-transparent to-[#1a1a1a]"></div>
-  <nav class="w-full flex justify-between items-center py-4 z-10 relative">
-    <img class="w-32" src="logo.svg" alt="Rave Logo">
-    <button onclick="history.back()" class="text-sm border border-white/10 rounded px-4 py-2 bg-white/5 hover:bg-white/10 transition">Return</button>
-  </nav>
+  <div class="absolute inset-0 bg-gradient-to-br from-transparent to-[#1a1a1a] z-0"></div>
 
-  <div class="w-28 h-28 mt-10 mb-4 z-10 relative">
+  <div class="w-28 h-28 mx-auto mt-6 mb-4 z-10 relative">
     <img src="holl.png" alt="">
   </div>
-  <h1 class="text-4xl font-bold mb-6 bg-gradient-to-r from-[#00FFFF] to-blue-600 text-transparent bg-clip-text z-10 relative">Top 20 Referrers</h1>
+  <h1 class="text-4xl font-bold mb-6 text-center bg-gradient-to-r from-yellow-400 to-pink-500 text-transparent bg-clip-text z-10 relative">Admin Dashboard</h1>
 
-  <table class="w-full max-w-4xl text-left border-collapse z-10 relative">
+  <div id="stats" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 z-10 relative"></div>
+  <table class="w-full text-left border-collapse z-10 relative">
     <thead>
       <tr class="bg-white/10">
-        <th class="p-3">Rank</th>
-        <th class="p-3">Name</th>
-        <th class="p-3">Email</th>
+        <th class="p-3">Referral Code</th>
         <th class="p-3">Referrals</th>
       </tr>
     </thead>
-    <tbody id="leaderboardBody">
-      <!-- Populated by JS -->
-    </tbody>
+    <tbody id="topReferrers"></tbody>
   </table>
 
   <script>
@@ -71,19 +64,31 @@
     })
       .then(res => res.json())
       .then(data => {
-        const tbody = document.getElementById('leaderboardBody');
-        data.top_referrers.forEach((ref, index) => {
+        document.getElementById('stats').innerHTML = `
+          <div class="bg-white/5 border border-white/10 rounded-xl p-6">
+            <h2 class="text-xl font-semibold mb-2">Total Users</h2>
+            <p class="text-3xl text-yellow-400 font-bold">${data.total_users}</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-xl p-6">
+            <h2 class="text-xl font-semibold mb-2">Total Coins</h2>
+            <p class="text-3xl text-green-400 font-bold">${data.total_rave_coins}</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-xl p-6">
+            <h2 class="text-xl font-semibold mb-2">Top Referrer</h2>
+            <p class="text-lg text-blue-400">${data.top_referrers[0]?.referred_by || 'N/A'}</p>
+            <p class="text-sm text-gray-300">${data.top_referrers[0]?.count || 0} referrals</p>
+          </div>`;
+
+        const tbody = document.getElementById('topReferrers');
+        data.top_referrers.forEach(ref => {
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td class="p-3">${index + 1}</td>
             <td class="p-3">${ref.referred_by}</td>
-            <td class="p-3">-</td>
-            <td class="p-3">${ref.count}</td>
-          `;
+            <td class="p-3">${ref.count}</td>`;
           tbody.appendChild(tr);
         });
       })
-      .catch(err => console.error('Failed to load leaderboard', err));
+      .catch(err => console.error('Failed to load admin data', err));
   </script>
 </body>
 </html>
