@@ -14,12 +14,14 @@
       font-family: 'Inter', sans-serif;
       background: black;
       color: white;
+      height: 100%;
     }
     .star {
       background-color: white;
       border-radius: 50%;
       position: absolute;
       animation: twinkling 2s infinite, move 10s infinite;
+      
     }
     @keyframes twinkling {
       0% { opacity: 0.6; }
@@ -44,18 +46,18 @@
   </style>
 </head>
 <body>
-  <div id="starfield" class="absolute inset-0 z-0 pointer-events-none overflow-x-hidden overflow-y-hiddden"></div>
+  <div id="starfield" class="absolute inset-0 z-0 pointer-events-none overflow-x-hidden overflow-y-hidden"></div>
   <div class="absolute inset-0 pointer-events-none z-0 bg-gradient-to-br from-transparent to-[#1a1a1a]"></div>
 
-  <nav class="w-full flex justify-between items-center py-4 px-6 z-10 relative">
+  <nav class="w-full flex justify-between items-center py-4 px-4 z-10 relative">
     <img class="w-32" src="logo.svg" alt="Rave Logo">
-    <button onclick="history.back()" class="text-sm border border-white/10 rounded px-4 py-2 hover:bg-white/10 transition">
+    <button onclick="history.back()" class="text-sm border border-white/10 rounded px-4 py-2 bg-white/5 hover:bg-white/10 transition">
         Return to Dashboard
-      </button>      
+    </button>
   </nav>
 
-  <main class="pt-28 px-6 max-w-4xl mx-auto z-10 relative">
-    <div class="w-28 h-28 mx-auto mb-6 fade-in">
+  <main class="pt-10 px-6 max-w-4xl mx-auto z-10 relative">
+    <div class="w-28 h-28 mx-auto mb-6 fade-in z-10 relative">
       <img src="holl.png" alt="">
     </div>
     <h1 class="text-4xl md:text-5xl font-bold text-center mb-4 bg-gradient-to-b from-black to-white text-transparent bg-clip-text fade-in">Referral Summary</h1>
@@ -70,11 +72,19 @@
         <h2 class="text-xl font-bold">Earned</h2>
         <p id="earnedCoins" class="text-3xl font-semibold text-yellow-400">0 RAVE COINS</p>
       </div>
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6 text-center">
+        <h2 class="text-xl font-bold">Referral Code</h2>
+        <p id="referralCode" class="text-xl font-mono text-blue-400 break-words">N/A</p>
+      </div>
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6 text-center">
+        <h2 class="text-xl font-bold">Bonus</h2>
+        <p id="bonusStatus" class="text-xl text-purple-400">Not Yet Earned</p>
+      </div>
     </div>
 
     <div class="flex justify-center space-x-4 mb-10 fade-in">
-      <a href="#" class="text-sm border border-white/10 rounded px-4 py-2 hover:bg-white/10 transition">Leaderboard</a>
-      <button class="text-sm border border-white/10 rounded px-4 py-2 hover:bg-white/10 transition" onclick="shareReferral()">Invite</button>
+      <a href="#" class="text-sm  rounded px-4 py-2 bg-gradient-to-r from-[#00FFFF] to-blue-600 shadow-lg hover:bg-white/10 transition">Leaderboard</a>
+      <button class="text-sm border border-white/10 rounded px-4 py-2 bg-white/5 hover:bg-white/10 transition" onclick="shareReferral()">Invite</button>
     </div>
   </main>
 
@@ -101,10 +111,27 @@
       container.appendChild(star);
     }
 
+    document.addEventListener('DOMContentLoaded', () => {
+      const email = new URLSearchParams(window.location.search).get('email');
+      if (!email) return;
+
+      fetch(`https://pure-sea-47438-9b41a08c5720.herokuapp.com/me?email=${encodeURIComponent(email)}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('invitedCount').textContent = data.referral_count || 0;
+          document.getElementById('earnedCoins').textContent = `${data.rave_coins || 0} RAVE COINS`;
+          document.getElementById('referralCode').textContent = data.referral_code || 'N/A';
+          document.getElementById('bonusStatus').textContent = data.bonus_awarded ? '✅ Earned' : 'Not Yet Earned';
+
+          // store for sharing
+          window._referralCode = data.referral_code;
+        })
+        .catch(err => console.error('Failed to load referral data', err));
+    });
+
     function shareReferral() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get('ref') || 'YOUR_REF_CODE';
-      const referralUrl = window.location.origin + '/?ref=' + encodeURIComponent(code);
+      const code = window._referralCode || 'YOUR_REF_CODE';
+      const referralUrl = window.location.origin + `/?ref=${encodeURIComponent(code)}`;
       if (navigator.share) {
         navigator.share({
           title: 'Join EarnRave and start earning!',
@@ -116,18 +143,6 @@
         alert('Referral link copied!');
       }
     }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const email = new URLSearchParams(window.location.search).get('email');
-      if (!email) return;
-      fetch(`https://pure-sea-47438-9b41a08c5720.herokuapp.com/me?email=${encodeURIComponent(email)}`)
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById('invitedCount').textContent = data.referral_count || 0;
-          document.getElementById('earnedCoins').textContent = `${(data.referral_count || 0) * 10}`;
-        })
-        .catch(err => console.error('Failed to load referral data', err));
-    });
   </script>
 </body>
 </html>
