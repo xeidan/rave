@@ -44,7 +44,7 @@
   </style>
 </head>
 <body>
-  <div id="starfield" class="absolute inset-0 z-0 pointer-events-none overflow-hidden"></div>
+  <div id="starfield" class="absolute inset-0 z-0 pointer-events-none overflow-x-hidden overflow-y-hiddden"></div>
   <div class="absolute inset-0 pointer-events-none z-0 bg-gradient-to-br from-transparent to-[#1a1a1a]"></div>
 
   <nav class="w-full flex justify-between items-center py-4 px-6 z-10 relative">
@@ -58,7 +58,7 @@
     <div class="w-28 h-28 mx-auto mb-6 fade-in">
       <img src="holl.png" alt="">
     </div>
-    <h1 class="text-4xl md:text-5xl font-bold text-center mb-4 bg-gradient-to-b from-white to-black text-transparent bg-clip-text fade-in">Referral Summary</h1>
+    <h1 class="text-4xl md:text-5xl font-bold text-center mb-4 bg-gradient-to-b from-black to-white text-transparent bg-clip-text fade-in">Referral Summary</h1>
     <p class="text-center text-gray-300 mb-10 fade-in">Track your referrals and rewards in real-time.</p>
 
     <div class="grid md:grid-cols-2 gap-6 mb-8 fade-in">
@@ -68,7 +68,7 @@
       </div>
       <div class="bg-white/5 border border-white/10 rounded-xl p-6 text-center">
         <h2 class="text-xl font-bold">Earned</h2>
-        <p id="earnedCoins" class="text-3xl font-semibold text-yellow-400">₦0</p>
+        <p id="earnedCoins" class="text-3xl font-semibold text-yellow-400">0 RAVE COINS</p>
       </div>
     </div>
 
@@ -124,7 +124,7 @@
         .then(res => res.json())
         .then(data => {
           document.getElementById('invitedCount').textContent = data.referral_count || 0;
-          document.getElementById('earnedCoins').textContent = `₦${(data.referral_count || 0) * 10}`;
+          document.getElementById('earnedCoins').textContent = `${(data.referral_count || 0) * 10}`;
         })
         .catch(err => console.error('Failed to load referral data', err));
     });
