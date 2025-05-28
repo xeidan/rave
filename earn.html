@@ -14,6 +14,8 @@
       font-family: 'Inter', sans-serif;
       background: black;
       color: white;
+      min-height: 100vh;
+      position: relative;
     }
     .star {
       background-color: white;
@@ -51,7 +53,7 @@
     <img class="w-32" src="logo.svg" alt="Rave Logo">
     <button onclick="history.back()" class="text-sm border border-white/10 rounded px-4 py-2 hover:bg-white/10 transition">
         Return to Dashboard
-      </button>      
+    </button>      
   </nav>
 
   <main class="pt-28 px-6 max-w-5xl mx-auto z-10 relative text-center">
@@ -62,16 +64,13 @@
     <p class="text-gray-300 text-lg mt-4 mb-12 fade-in">Complete tasks below to earn coins instantly.</p>
 
     <div id="rewardNotice" class="text-green-400 font-bold text-xl mb-6 hidden fade-in">+10 RAVE Coins!</div>
-    <section class="grid md:grid-cols-3 gap-6 fade-in" id="earnTasks">
-      <!-- Tasks will be populated dynamically -->
-    </section>
+    <section class="grid md:grid-cols-3 gap-6 fade-in" id="earnTasks"></section>
 
     <div class="mt-14 bg-white/5 border border-white/10 rounded-xl p-6 max-w-2xl mx-auto fade-in">
       <h3 class="text-xl font-semibold mb-4">Want to Multiply Your Earnings?</h3>
-      <p class="text-gray-300 text-sm mb-4">Premium users earn 2x coins on every task and enjoy exclusive bonuses.</p>
+      <p class="text-gray-300 text-sm mb-4">Premium users earn 3x coins on every task and enjoy exclusive bonuses.</p>
       <a href="premium.html" class="inline-block bg-gradient-to-r from-[#00FFFF] to-blue-600 text-white px-6 py-3 rounded-md hover:opacity-90 transition">Upgrade to Premium</a>
     </div>
-
   </main>
 
   <footer class="z-10 w-full text-center py-10 mt-24 border-t border-white/10">
@@ -85,13 +84,13 @@
 
   <script>
     const container = document.getElementById('starfield');
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 200; i++) {
       const star = document.createElement('div');
       const size = Math.random() * 2 + 1;
       star.className = 'star';
       star.style.width = `${size}px`;
       star.style.height = `${size}px`;
-      star.style.top = `${Math.random() * 100}%`;
+      star.style.top = `${Math.random() * document.body.scrollHeight}px`;
       star.style.left = `${Math.random() * 100}%`;
       star.style.animationDuration = `${1.5 + Math.random() * 2}s, ${15 + Math.random() * 10}s`;
       container.appendChild(star);
@@ -100,25 +99,32 @@
     const urlParams = new URLSearchParams(window.location.search);
     const email = urlParams.get('email');
 
-    if (!email) {
-      alert('Email missing in URL');
-    } else {
+    function loadTasks() {
       fetch(`https://pure-sea-47438-9b41a08c5720.herokuapp.com/earn-tasks?email=${encodeURIComponent(email)}`)
         .then(res => res.json())
         .then(data => {
           const taskContainer = document.getElementById('earnTasks');
+          taskContainer.innerHTML = '';
           data.tasks.forEach(task => {
             const div = document.createElement('div');
             div.className = "bg-white/5 border border-white/10 p-6 rounded-xl transition transform duration-500 hover:scale-105";
             div.innerHTML = `
               <h2 class="text-xl font-semibold mb-2">${task.icon} ${task.title}</h2>
               <p class="text-sm text-gray-300">${task.description}</p>
-              <button class="mt-4 bg-gradient-to-r from-[#00FFFF] to-blue-600 text-white px-4 py-2 rounded hover:opacity-90 transition" onclick="completeTask('${task.id}', this)">${task.action}</button>
+              <a class="mt-4 inline-block bg-gradient-to-r from-[#00FFFF] to-blue-600 text-white px-4 py-2 rounded hover:opacity-90 transition" href="${task.url}" target="_blank" onclick="trackClick('${task.id}')">${task.action}</a>
             `;
             taskContainer.appendChild(div);
           });
         })
         .catch(err => console.error('Error loading tasks:', err));
+    }
+
+    function trackClick(taskId) {
+      fetch('https://pure-sea-47438-9b41a08c5720.herokuapp.com/log-click', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, taskId })
+      });
     }
 
     function completeTask(taskId, button) {
@@ -138,6 +144,14 @@
             reward.classList.remove('hidden');
             reward.classList.add('animate-pulse');
             setTimeout(() => reward.classList.add('hidden'), 3000);
+
+            fetch('https://pure-sea-47438-9b41a08c5720.herokuapp.com/log-conversion', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, taskId, conversionValue: result.reward })
+            });
+
+            loadTasks();
           } else {
             alert('Task completion failed: ' + result.message);
           }
@@ -147,7 +161,26 @@
           alert('Task completion failed.');
         });
     }
+
+    function trackAdView() {
+      fetch('https://pure-sea-47438-9b41a08c5720.herokuapp.com/reward/ad-view', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      })
+        .then(res => res.json())
+        .then(data => {
+          alert(data.message);
+          loadTasks();
+        })
+        .catch(err => {
+          console.error('Ad reward error:', err);
+          alert('Ad reward tracking failed');
+        });
+    }
+
+    if (email) loadTasks();
+    else alert('Email missing in URL');
   </script>
 </body>
 </html>
-

@@ -56,7 +56,12 @@
           <button onclick="loadAllSignups()" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded">Apply Filters</button>
           <button onclick="exportToCSV()" class="bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded">Export CSV</button>
         </div>
-        <div id="allSignups" class="overflow-x-auto"></div>
+        <div id="allSignups" class="overflow-x-auto">
+          <table class="min-w-full">
+            <thead><tr><th>Name</th><th>Email</th><th>Signup Date</th></tr></thead>
+            <tbody id="signupsList"></tbody>
+          </table>
+        </div>
       </div>
     </details>
   </div>
@@ -130,6 +135,36 @@
         tbody.appendChild(tr);
       });
     });
+
+    function loadAllSignups() {
+      const token = localStorage.getItem('admin_token');
+      const date = document.getElementById('filterDate').value;
+      const referralCode = document.getElementById('filterCode').value;
+      const minCoins = document.getElementById('filterCoins').value;
+      let query = '?';
+      if (date) query += `signup_date=${date}&`;
+      if (referralCode) query += `referral_code=${referralCode}&`;
+      if (minCoins) query += `min_coins=${minCoins}&`;
+
+      fetch(`https://pure-sea-47438-9b41a08c5720.herokuapp.com/admin/users${query}`, {
+        headers: { 'Authorization': 'Bearer ' + token }
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (!Array.isArray(result)) throw new Error('Expected array but got: ' + JSON.stringify(result));
+        const container = document.getElementById('signupsList');
+        container.innerHTML = '';
+        result.forEach(user => {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td>${user.name}</td><td>${user.email}</td><td>${user.signup_date}</td>`;
+          container.appendChild(row);
+        });
+      })
+      .catch(err => {
+        console.error('Failed to load all users:', err);
+        alert('Could not load users. Please check the console.');
+      });
+    }
 
     function exportToCSV() {
       const table = document.querySelector('#allSignups table');
