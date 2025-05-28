@@ -21,7 +21,6 @@
       border-radius: 50%;
       position: absolute;
       animation: twinkling 2s infinite, move 10s infinite;
-      
     }
     @keyframes twinkling {
       0% { opacity: 0.6; }
@@ -83,7 +82,7 @@
     </div>
 
     <div class="flex justify-center space-x-4 mb-10 fade-in">
-      <a href="#" class="text-sm  rounded px-4 py-2 bg-gradient-to-r from-[#00FFFF] to-blue-600 shadow-lg hover:bg-white/10 transition">Leaderboard</a>
+      <a id="leaderboardBtn" href="leaderboard.html" class="text-sm rounded px-4 py-2 bg-gradient-to-r from-[#00FFFF] to-blue-600 shadow-lg hover:bg-white/10 transition">Leaderboard</a>
       <button class="text-sm border border-white/10 rounded px-4 py-2 bg-white/5 hover:bg-white/10 transition" onclick="shareReferral()">Invite</button>
     </div>
   </main>
@@ -112,8 +111,13 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      const email = new URLSearchParams(window.location.search).get('email');
-      if (!email) return;
+      const urlParams = new URLSearchParams(window.location.search);
+      const email = urlParams.get('email');
+      const name = urlParams.get('name');
+      const code = urlParams.get('code') || urlParams.get('ref');
+      const coins = urlParams.get('coins');
+
+      if (!email || !code || !coins || !name) return;
 
       fetch(`https://pure-sea-47438-9b41a08c5720.herokuapp.com/me?email=${encodeURIComponent(email)}`)
         .then(res => res.json())
@@ -122,11 +126,11 @@
           document.getElementById('earnedCoins').textContent = `${data.rave_coins || 0} RAVE COINS`;
           document.getElementById('referralCode').textContent = data.referral_code || 'N/A';
           document.getElementById('bonusStatus').textContent = data.bonus_awarded ? '✅ Earned' : 'Not Yet Earned';
-
-          // store for sharing
           window._referralCode = data.referral_code;
-        })
-        .catch(err => console.error('Failed to load referral data', err));
+
+          const leaderboardLink = document.getElementById('leaderboardBtn');
+          leaderboardLink.href = `leaderboard.html?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}&code=${encodeURIComponent(code)}&coins=${encodeURIComponent(data.rave_coins)}`;
+        });
     });
 
     function shareReferral() {
