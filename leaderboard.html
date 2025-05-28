@@ -7,11 +7,26 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+    }
     body {
       font-family: 'Inter', sans-serif;
       background: black;
       color: white;
       overflow-x: hidden;
+      position: relative;
+    }
+    #starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      overflow: hidden;
     }
     .star {
       background-color: white;
@@ -31,7 +46,7 @@
   </style>
 </head>
 <body>
-  <div id="starfield" class="absolute inset-0 z-0 pointer-events-none overflow-hidden"></div>
+  <div id="starfield"></div>
   <div class="absolute inset-0 bg-gradient-to-br from-transparent to-[#1a1a1a] z-0"></div>
 
   <nav class="w-full flex justify-between items-center py-4 px-6 z-10 relative">
@@ -76,6 +91,17 @@
       container.appendChild(star);
     }
 
+    function maskName(fullName) {
+      const parts = fullName.split(' ');
+      return parts.map(part => {
+        if (part.length <= 2) return part;
+        const first = part[0];
+        const last = part[part.length - 1];
+        const middle = '*'.repeat(Math.max(1, part.length - 2));
+        return first + middle + last;
+      }).join(' ');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       fetch('https://pure-sea-47438-9b41a08c5720.herokuapp.com/leaderboard')
         .then(res => res.json())
@@ -85,12 +111,16 @@
 
           const topTen = data.slice(0, 10);
 
-          container.innerHTML = topTen.map((user, i) => `
-            <div class="flex justify-between py-2 border-b border-white/10">
-              <span class="text-white">${i + 1}. ${user.name || user.email || 'Anonymous'}</span>
-              <span class="text-yellow-400">${user.count || 0} referrals</span>
-            </div>
-          `).join('');
+          container.innerHTML = topTen.map((user, i) => {
+            const name = user.name || user.email || 'Anonymous';
+            const masked = maskName(name);
+            return `
+              <div class="flex justify-between py-2 border-b border-white/10">
+                <span class="text-white">${i + 1}. ${masked}</span>
+                <span class="text-yellow-400">${user.count || 0} referrals</span>
+              </div>
+            `;
+          }).join('');
         })
         .catch(err => {
           const container = document.getElementById('leaderboardContainer');

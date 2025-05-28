@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard</title>
+  <title>Admin Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', sans-serif; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: black;
+      color: white;
+      overflow-x: hidden;
+    }
     .star {
       background-color: white;
       border-radius: 50%;
@@ -25,25 +30,19 @@
     }
   </style>
 </head>
-<body class="bg-black text-white min-h-screen px-6 py-4 relative">
+<body class="flex flex-col items-center justify-center min-h-screen px-4 relative">
   <div id="starfield" class="absolute inset-0 z-0 pointer-events-none overflow-hidden"></div>
   <div class="absolute inset-0 bg-gradient-to-br from-transparent to-[#1a1a1a] z-0"></div>
 
-  <div class="w-28 h-28 mx-auto mt-6 mb-4 z-10 relative">
-    <img src="holl.png" alt="">
+  <div class="z-10 bg-white/5 border border-white/10 p-8 rounded-lg max-w-md w-full">
+    <h1 class="text-3xl font-bold mb-6 text-center text-white">Admin Login</h1>
+    <form id="loginForm" class="space-y-4">
+      <input type="text" id="username" placeholder="Username" class="w-full px-4 py-2 bg-black border border-white/10 rounded text-white" required />
+      <input type="password" id="password" placeholder="Password" class="w-full px-4 py-2 bg-black border border-white/10 rounded text-white" required />
+      <button type="submit" class="w-full py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded hover:opacity-90 transition">Login</button>
+    </form>
+    <p id="errorMessage" class="mt-4 text-center text-red-500 text-sm hidden"></p>
   </div>
-  <h1 class="text-4xl font-bold mb-6 text-center bg-gradient-to-r from-yellow-400 to-pink-500 text-transparent bg-clip-text z-10 relative">Admin Dashboard</h1>
-
-  <div id="stats" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 z-10 relative"></div>
-  <table class="w-full text-left border-collapse z-10 relative">
-    <thead>
-      <tr class="bg-white/10">
-        <th class="p-3">Referral Code</th>
-        <th class="p-3">Referrals</th>
-      </tr>
-    </thead>
-    <tbody id="topReferrers"></tbody>
-  </table>
 
   <script>
     const container = document.getElementById('starfield');
@@ -59,36 +58,29 @@
       container.appendChild(star);
     }
 
-    fetch('https://pure-sea-47438-9b41a08c5720.herokuapp.com/admin/dashboard', {
-      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('admin_token') }
-    })
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('stats').innerHTML = `
-          <div class="bg-white/5 border border-white/10 rounded-xl p-6">
-            <h2 class="text-xl font-semibold mb-2">Total Users</h2>
-            <p class="text-3xl text-yellow-400 font-bold">${data.total_users}</p>
-          </div>
-          <div class="bg-white/5 border border-white/10 rounded-xl p-6">
-            <h2 class="text-xl font-semibold mb-2">Total Coins</h2>
-            <p class="text-3xl text-green-400 font-bold">${data.total_rave_coins}</p>
-          </div>
-          <div class="bg-white/5 border border-white/10 rounded-xl p-6">
-            <h2 class="text-xl font-semibold mb-2">Top Referrer</h2>
-            <p class="text-lg text-blue-400">${data.top_referrers[0]?.referred_by || 'N/A'}</p>
-            <p class="text-sm text-gray-300">${data.top_referrers[0]?.count || 0} referrals</p>
-          </div>`;
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
 
-        const tbody = document.getElementById('topReferrers');
-        data.top_referrers.forEach(ref => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td class="p-3">${ref.referred_by}</td>
-            <td class="p-3">${ref.count}</td>`;
-          tbody.appendChild(tr);
+      try {
+        const res = await fetch('https://pure-sea-47438-9b41a08c5720.herokuapp.com/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
         });
-      })
-      .catch(err => console.error('Failed to load admin data', err));
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Login failed');
+
+        localStorage.setItem('admin_token', data.token);
+        window.location.href = 'admin-dashboard.html';
+      } catch (err) {
+        const msg = document.getElementById('errorMessage');
+        msg.textContent = err.message;
+        msg.classList.remove('hidden');
+      }
+    });
   </script>
 </body>
 </html>
