@@ -68,7 +68,7 @@
 
     <div class="mt-14 bg-white/5 border border-white/10 rounded-xl p-6 max-w-2xl mx-auto fade-in">
       <h3 class="text-xl font-semibold mb-4">Want to Multiply Your Earnings?</h3>
-      <p class="text-gray-300 text-sm mb-4">Premium users earn 3x coins on every task and enjoy exclusive bonuses.</p>
+      <p class="text-gray-300 text-sm mb-4">Premium users earn 2x coins on every task and enjoy exclusive bonuses.</p>
       <a href="premium.html" class="inline-block bg-gradient-to-r from-[#00FFFF] to-blue-600 text-white px-6 py-3 rounded-md hover:opacity-90 transition">Upgrade to Premium</a>
     </div>
   </main>
@@ -81,6 +81,10 @@
     </div>
     <p class="text-gray-500 text-sm">&copy; 2025 EarnRave. All rights reserved.</p>
   </footer>
+
+  <!-- Example Adsterra Script Placement -->
+  <script type="text/javascript" src="//pl15815328.highcpmgate.com/bdb13c91beff5a34c367b9f633f5f4f4/invoke.js"></script>
+  <div id="container-bdb13c91beff5a34c367b9f633f5f4f4"></div>
 
   <script>
     const container = document.getElementById('starfield');
@@ -111,7 +115,7 @@
             div.innerHTML = `
               <h2 class="text-xl font-semibold mb-2">${task.icon} ${task.title}</h2>
               <p class="text-sm text-gray-300">${task.description}</p>
-              <a class="mt-4 inline-block bg-gradient-to-r from-[#00FFFF] to-blue-600 text-white px-4 py-2 rounded hover:opacity-90 transition" href="${task.url}" target="_blank" onclick="trackClick('${task.id}')">${task.action}</a>
+              <a class="mt-4 inline-block bg-gradient-to-r from-[#00FFFF] to-blue-600 text-white px-4 py-2 rounded hover:opacity-90 transition" href="${task.url}" target="_blank" onclick="trackClick('${task.id}', ${task.dynamic_payout || false})">${task.action}</a>
             `;
             taskContainer.appendChild(div);
           });
@@ -119,11 +123,11 @@
         .catch(err => console.error('Error loading tasks:', err));
     }
 
-    function trackClick(taskId) {
+    function trackClick(taskId, dynamicPayout) {
       fetch('https://pure-sea-47438-9b41a08c5720.herokuapp.com/log-click', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, taskId })
+        body: JSON.stringify({ email, taskId, dynamicPayout })
       });
     }
 
@@ -159,23 +163,6 @@
         .catch(err => {
           console.error('Error completing task:', err);
           alert('Task completion failed.');
-        });
-    }
-
-    function trackAdView() {
-      fetch('https://pure-sea-47438-9b41a08c5720.herokuapp.com/reward/ad-view', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      })
-        .then(res => res.json())
-        .then(data => {
-          alert(data.message);
-          loadTasks();
-        })
-        .catch(err => {
-          console.error('Ad reward error:', err);
-          alert('Ad reward tracking failed');
         });
     }
 
