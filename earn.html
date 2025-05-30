@@ -63,17 +63,20 @@
     <h1 class="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-[#00FFFF] to-blue-600 text-transparent bg-clip-text fade-in">Earn Rave Coins Daily</h1>
     <p class="text-gray-300 text-lg mt-4 mb-12 fade-in">Complete tasks below to earn coins instantly.</p>
 
-    <!-- ADSTERA BANNER AD -->
+    <!-- HIGH PERFORMANCE FORMAT AD UNIT -->
     <div class="my-10">
-      <div id="container-4968807" class="mx-auto w-full max-w-md h-[250px] bg-white/10 rounded-lg"></div>
+      <div id="ad-container" class="mx-auto w-full max-w-md h-[250px] bg-white/10 rounded-lg"></div>
+      <script type="text/javascript">
+        atOptions = {
+          'key' : 'f44926a5fc50a4246a34dfdac60ae997',
+          'format' : 'iframe',
+          'height' : 250,
+          'width' : 300,
+          'params' : {}
+        };
+      </script>
+      <script type="text/javascript" src="//www.highperformanceformat.com/f44926a5fc50a4246a34dfdac60ae997/invoke.js"></script>
     </div>
-    <script type="text/javascript" src="//pl15815328.highcpmgate.com/4968807/invoke.js"></script>
-
-    <!-- ADSTERA POPUNDER -->
-    <script type='text/javascript' src='//pl15815328.highcpmgate.com/pupunder.js'></script>
-
-    <!-- ADSTERA INTERSTITIAL -->
-    <script type='text/javascript' src='//pl15815328.highcpmgate.com/interstitial.js'></script>
 
     <div id="rewardNotice" class="text-green-400 font-bold text-xl mb-6 hidden fade-in">+10 RAVE Coins!</div>
     <section class="grid md:grid-cols-3 gap-6 fade-in" id="earnTasks"></section>
@@ -137,41 +140,6 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, taskId, dynamicPayout })
       });
-    }
-
-    function completeTask(taskId, button) {
-      fetch(`https://pure-sea-47438-9b41a08c5720.herokuapp.com/complete-task`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ taskId, email })
-      })
-        .then(res => res.json())
-        .then(result => {
-          if (result.success) {
-            button.textContent = 'Completed';
-            button.disabled = true;
-            button.classList.add('opacity-50', 'cursor-not-allowed');
-            const reward = document.getElementById('rewardNotice');
-            reward.textContent = `+${result.reward} RAVE Coins!`;
-            reward.classList.remove('hidden');
-            reward.classList.add('animate-pulse');
-            setTimeout(() => reward.classList.add('hidden'), 3000);
-
-            fetch('https://pure-sea-47438-9b41a08c5720.herokuapp.com/log-conversion', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email, taskId, conversionValue: result.reward })
-            });
-
-            loadTasks();
-          } else {
-            alert('Task completion failed: ' + result.message);
-          }
-        })
-        .catch(err => {
-          console.error('Error completing task:', err);
-          alert('Task completion failed.');
-        });
     }
 
     if (email) loadTasks();
