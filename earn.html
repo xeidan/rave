@@ -57,6 +57,9 @@
       mask-composite: exclude;
       pointer-events: none;
     }
+    ::-webkit-scrollbar-thumb {
+      background-color: #e5e7eb; /* Tailwind gray-200 */
+    }
   </style>
 </head>
 <body>
@@ -74,22 +77,20 @@
   <main class="pt-6 px-6 max-w-5xl mx-auto z-10 relative">
     <!-- ADSTERRA CAROUSEL PLACEHOLDER -->
     <div class="w-full overflow-hidden rounded-lg mb-6 relative">
-      <div id="ad-carousel" class="flex overflow-x-auto snap-x snap-mandatory space-x-4 pb-4">
+      <div id="ad-carousel" class="flex overflow-x-auto snap-x snap-mandatory space-x-4 pb-4 scrollbar-thin scrollbar-thumb-gray-200">
         <!-- Example ad cards with value buttons -->
-        <div class="snap-center flex-shrink-0 w-72 bg-white/10 rounded-lg p-2 flex flex-col items-center justify-center text-center border border-cyan-300">
-          <img src="kni.jpeg" class="rounded mb-1" alt="Ad 1">
-          <button class="mt-2 px-3 py-1 text-sm bg-transparent border border-cyan-300 text-cyan-300 rounded">+5 RAVE</button>
+        <div class="snap-center flex-shrink-0 w-72 bg-white/10 rounded-lg p-2 flex flex-col items-center justify-center text-center border border-gradient-to-r from-[#00FFFF] to-blue-600">
+          <img src="https://via.placeholder.com/250x150" class="rounded mb-1" alt="Ad 1">
+          <button class="mt-2 px-3 py-1 text-sm bg-gradient-to-r from-[#00FFFF] to-blue-600 rounded">+5 RAVE</button>
         </div>
-        <div class="snap-center flex-shrink-0 w-72 bg-white/10 rounded-lg p-2 flex flex-col items-center justify-center text-center border border-purple-300">
-          <img src="png.jpeg
-          " class="rounded mb-1" alt="Ad 2">
-          <button class="mt-2 px-3 py-1 text-sm bg-transparent border border-purple-300 text-purple-300 rounded">+5 RAVE</button>
+        <div class="snap-center flex-shrink-0 w-72 bg-white/10 rounded-lg p-2 flex flex-col items-center justify-center text-center border border-gradient-to-r from-[#00FFFF] to-blue-600">
+          <img src="https://via.placeholder.com/250x150" class="rounded mb-1" alt="Ad 2">
+          <button class="mt-2 px-3 py-1 text-sm bg-gradient-to-r from-[#00FFFF] to-blue-600 rounded">+10 RAVE</button>
         </div>
-        <div class="snap-center flex-shrink-0 w-72 bg-white/10 rounded-lg p-2 flex flex-col items-center justify-center text-center border border-blue-300">
-          <img src="jpg.jpeg" class="rounded mb-1" alt="Ad 3">
-          <button class="mt-2 px-3 py-1 text-sm  bg-transparent border border-blue-300 text-blue-300  rounded">+5 RAVE</button>
+        <div class="snap-center flex-shrink-0 w-72 bg-white/10 rounded-lg p-2 flex flex-col items-center justify-center text-center border border-gradient-to-r from-[#00FFFF] to-blue-600">
+          <img src="https://via.placeholder.com/250x150" class="rounded mb-1" alt="Ad 3">
+          <button class="mt-2 px-3 py-1 text-sm bg-gradient-to-r from-[#00FFFF] to-blue-600 rounded">+15 RAVE</button>
         </div>
-        <!-- Add more up to 10 cards -->
       </div>
     </div>
 
