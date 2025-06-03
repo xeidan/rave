@@ -14,11 +14,8 @@
       font-family: 'Inter', sans-serif;
       background: black;
       color: white;
-      height: 100%;
-    }
-    body {
-      display: flex;
-      flex-direction: column;
+      min-height: 100vh;
+      scroll-behavior: smooth;
     }
     .star {
       background-color: white;
@@ -40,7 +37,7 @@
     }
   </style>
 </head>
-<body class="min-h-screen relative">
+<body>
   <div id="starfield" class="absolute inset-0 z-0 pointer-events-none overflow-hidden"></div>
   <div class="absolute inset-0 pointer-events-none z-0 bg-gradient-to-br from-transparent to-[#1a1a1a]"></div>
 
@@ -52,52 +49,68 @@
     </div>
   </nav>
 
-  <main class="pt-6 px-6 max-w-5xl mx-auto z-10 relative space-y-12 pb-24">
+  <main class="pt-6 px-6 max-w-5xl mx-auto z-10 relative">
+    <!-- Adsterra Popunder -->
+    <script type='text/javascript' src='//pl26792825.profitableratecpm.com/dc/88/86/dc88869fc2140dc0a85e9d67c47b7f56.js'></script>
 
-    <!-- Adsterra Direct Links -->
-    <section>
-      <h2 class="text-2xl font-bold mb-4">Direct Link Offers</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <a href="#" onclick="logClick('user@example.com', 'adsterra1')" class="bg-white/10 p-4 rounded-lg border border-cyan-500 text-center hover:bg-white/20">
-          Offer 1 – Adsterra<br><button class="mt-2 text-cyan-300 border border-cyan-300 px-3 py-1 rounded">+5 RAVE</button>
-        </a>
-        <!-- Add more Adsterra links here -->
+    <!-- Ad Carousel -->
+    <div class="w-full overflow-hidden rounded-lg mb-6 relative">
+      <div id="ad-carousel" class="flex overflow-x-auto snap-x snap-mandatory space-x-4 pb-4 scrollbar-thin scrollbar-thumb-gray-200">
+        <div class="snap-center flex-shrink-0 w-84 bg-white/10 rounded-lg p-2 flex flex-col items-center justify-center text-center border border-cyan-300">
+          <a href="https://www.profitableratecpm.com/qecbyh22?key=78f1186c75a5b1bbd2a1e74cca6a3c61" target="_blank"><img src="https://via.placeholder.com/250x150" class="rounded mb-1"></a>
+          <button class="mt-2 px-3 py-1 text-sm bg-transparent border border-cyan-300 text-cyan-300 rounded">+5 RAVE</button>
+        </div>
+        <div class="snap-center flex-shrink-0 w-84 bg-white/10 rounded-lg p-2 flex flex-col items-center justify-center text-center border border-purple-300">
+          <a href="https://www.profitableratecpm.com/z300b4wr9d?key=166a7143aa43f5381413ed20d7321b66" target="_blank"><img src="https://via.placeholder.com/250x150" class="rounded mb-1"></a>
+          <button class="mt-2 px-3 py-1 text-sm bg-transparent border border-purple-300 text-purple-300 rounded">+5 RAVE</button>
+        </div>
+        <div class="snap-center flex-shrink-0 w-84 bg-white/10 rounded-lg p-2 flex flex-col items-center justify-center text-center border border-blue-300">
+          <a href="https://www.profitableratecpm.com/rdfyzy0y?key=a70b92a80a9244164c193e8c4f137a57" target="_blank"><img src="https://via.placeholder.com/250x150" class="rounded mb-1"></a>
+          <button class="mt-2 px-3 py-1 text-sm bg-transparent border border-blue-300 text-blue-300 rounded">+5 RAVE</button>
+        </div>
+        <div class="snap-center flex-shrink-0 w-84 bg-white/10 rounded-lg p-2 flex flex-col items-center justify-center text-center border border-green-300">
+          <a href="https://www.profitableratecpm.com/rrafqbsvv?key=53f39b8d65afe8c4578923a494d69f2f" target="_blank"><img src="https://via.placeholder.com/250x150" class="rounded mb-1"></a>
+          <button class="mt-2 px-3 py-1 text-sm bg-transparent border border-green-300 text-green-300 rounded">+5 RAVE</button>
+        </div>
+        <div class="snap-center flex-shrink-0 w-84 bg-white/10 rounded-lg p-2 flex flex-col items-center justify-center text-center border border-pink-300">
+          <a href="https://www.profitableratecpm.com/veaapesq1?key=1aeb9eae3820869054730c1cc965bdde" target="_blank"><img src="https://via.placeholder.com/250x150" class="rounded mb-1"></a>
+          <button class="mt-2 px-3 py-1 text-sm bg-transparent border border-pink-300 text-pink-300 rounded">+5 RAVE</button>
+        </div>
       </div>
-    </section>
+    </div>
 
-    <!-- Propeller Ads (Push / Interstitial) -->
-    <section>
-      <h2 class="text-2xl font-bold mb-4">PropellerAds</h2>
-      <p class="text-sm text-gray-400">Enable notifications or view interstitials to earn coins</p>
-      <!-- Placeholder: Replace with real PropellerAds code -->
-      <script>/* Your PropellerAds script here */</script>
-      <button onclick="alert('Push activated')" class="bg-pink-500 px-4 py-2 mt-2 rounded">Enable Push Ads</button>
-    </section>
+    <h2 class="text-2xl font-bold mb-4">Categories</h2>
+    <div id="categoryButtons" class="overflow-x-auto flex gap-4 mb-6 scrollbar-none">
+      <button onclick="showCategory('links', this)" class="px-4 py-2 rounded-full bg-white/10 whitespace-nowrap">🔗 Links</button>
+      <button onclick="showCategory('videos', this)" class="px-4 py-2 rounded-full bg-white/10 whitespace-nowrap">🎥 Videos</button>
+      <button onclick="showCategory('surveys', this)" class="px-4 py-2 rounded-full bg-white/10 whitespace-nowrap">🧠 Surveys</button>
+    </div>
 
-    <!-- AdMaven Integration -->
-    <section>
-      <h2 class="text-2xl font-bold mb-4">AdMaven Ads</h2>
-      <p class="text-sm text-gray-400">Direct link ads and push notifications</p>
-      <script>/* Your AdMaven script here */</script>
-      <button onclick="logClick('user@example.com', 'admaven1')" class="bg-indigo-600 px-4 py-2 rounded mt-2">Engage & Earn</button>
-    </section>
-
-    <!-- CPA / Affiliate Offers -->
-    <section>
-      <h2 class="text-2xl font-bold mb-4">CPA & Affiliate Offers (Mobidea, Ola Ads)</h2>
-      <p class="text-sm text-gray-400 mb-2">Earn RAVE by signing up, installing apps or making purchases</p>
-      <a href="#" onclick="logConversion('user@example.com', 'cpa-offer-1', 50)" class="underline text-blue-400">Complete a high-paying task</a>
-    </section>
-
-    <!-- Offerwall Providers -->
-    <section>
-      <h2 class="text-2xl font-bold mb-4">Surveys & Offerwalls</h2>
-      <p class="text-sm text-gray-400">Powered by OfferToro, AdGem, etc.</p>
-      <iframe src="https://example.com/offerwall" class="w-full h-[500px] rounded-lg border border-white/20"></iframe>
-    </section>
-
-    <p class="text-center text-sm text-transparent bg-gradient-to-r from-[#00FFFF] to-blue-600 bg-clip-text">Upgrade to premium now to earn 3x</p>
+    <div id="categoryContent" class="transition-opacity duration-500">
+      <div id="links" class="category-slide hidden">
+        <h3 class="text-xl font-semibold mb-3">🔗 Click Links (+5 RAVE)</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <div class="bg-white/5 p-6 rounded">Link Ad 1</div>
+        </div>
+      </div>
+      <div id="videos" class="category-slide">
+        <h3 class="text-xl font-semibold mb-3">🎥 Watch Videos (+10 RAVE)</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <div class="bg-white/5 p-6 rounded">Video Ad 1</div>
+        </div>
+      </div>
+      <div id="surveys" class="category-slide hidden">
+        <h3 class="text-xl font-semibold mb-3">🧠 Take Surveys (+25 RAVE)</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <div class="bg-white/5 p-6 rounded">Survey Ad 1</div>
+        </div>
+      </div>
+    </div>
+    <p class="text-center text-sm text-transparent bg-gradient-to-r from-[#00FFFF] to-blue-600 bg-clip-text mt-6">Upgrade to premium now to earn 3x</p>
   </main>
+
+  <!-- Adsterra Social Bar -->
+  <script type='text/javascript' src='//pl26804698.profitableratecpm.com/0b/3a/fe/0b3afe60698399e6279f78858188c2fe.js'></script>
 
   <footer class="z-10 w-full text-center py-10 mt-10 border-t border-white/10">
     <div class="flex justify-center space-x-6 mb-4">
@@ -109,37 +122,33 @@
   </footer>
 
   <script>
-    // Starfield Generator
     const container = document.getElementById('starfield');
-    const screenHeight = window.innerHeight;
     for (let i = 0; i < 200; i++) {
       const star = document.createElement('div');
       const size = Math.random() * 2 + 1;
       star.className = 'star';
       star.style.width = `${size}px`;
       star.style.height = `${size}px`;
-      star.style.top = `${Math.random() * screenHeight}px`;
+      star.style.top = `${Math.random() * document.body.scrollHeight}px`;
       star.style.left = `${Math.random() * 100}%`;
       star.style.animationDuration = `${1.5 + Math.random() * 2}s, ${15 + Math.random() * 10}s`;
       container.appendChild(star);
     }
 
-    // Reward logging
-    function logClick(email, taskId) {
-      fetch('/log-click', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, taskId })
-      });
+    function showCategory(categoryId, button) {
+      document.querySelectorAll('.category-slide').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('#categoryButtons button').forEach(btn => btn.classList.remove('selected'));
+      const selected = document.getElementById(categoryId);
+      selected.classList.remove('hidden');
+      selected.classList.add('slide-enter');
+      setTimeout(() => selected.classList.add('slide-enter-active'), 50);
+      if (button) button.classList.add('selected');
     }
 
-    function logConversion(email, taskId, conversionValue) {
-      fetch('/log-conversion', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, taskId, conversionValue })
-      });
-    }
+    window.addEventListener('DOMContentLoaded', () => {
+      const defaultBtn = document.querySelector("#categoryButtons button[onclick*='videos']");
+      if (defaultBtn) defaultBtn.click();
+    });
   </script>
 </body>
 </html>
