@@ -6,13 +6,8 @@
   <title>Earn Rave</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  
   <style>
-    html, body {
-      overflow-x: hidden;
-      margin: 0;
-      padding: 0;
-    }
+    html, body { overflow-x: hidden; margin: 0; padding: 0; }
     body { font-family: 'Inter', sans-serif; }
     .star {
       background-color: white;
@@ -33,9 +28,7 @@
       0% { opacity: 0; transform: scale(0.9); }
       100% { opacity: 1; transform: scale(1); }
     }
-    #logoSplash {
-      animation: logoFadeIn 1.5s ease-out forwards;
-    }
+    #logoSplash { animation: logoFadeIn 1.5s ease-out forwards; }
     .spinner {
       width: 48px;
       height: 48px;
@@ -44,9 +37,7 @@
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body class="bg-black text-white min-h-screen flex flex-col items-center relative px-4 overflow-x-hidden overflow-y-auto">
@@ -57,9 +48,9 @@
     <div class="spinner"></div>
   </div>
 
-  <nav class="w-full flex justify-between items-center py-4 px-6 z-10 fixed top-0 ">
+  <nav id="navbar" class="w-full flex justify-between items-center py-4 px-6 fixed top-0 z-40 transition-all duration-300">
     <img class="w-32" src="logo.svg" alt="Rave Logo">
-    <a href="waitlist.html" class="border border-white/20 hover:border-white/50 text-white px-4 py-2 rounded-md transition bg-transparent">Go to Waitlist</a>
+    <a href="waitlist.html" class="border border-white/20 hover:border-white/50 text-white px-4 py-2 rounded-md transition bg-transparent animate-pulse text-cyan-300">Go to Waitlist</a>
   </nav>
 
   <div class="pt-32 flex justify-center relative z-10">
@@ -121,11 +112,6 @@
     </div>
   </div>
 
-  <div class="mt-12 space-y-4 w-full max-w-xs z-10 mb-16" data-animate="fade-in-up" data-delay="500">
-    <a href="join.html" class="w-full block text-center bg-gradient-to-r from-[#00FFFF] to-blue-600 hover:opacity-90 text-white px-4 py-3 rounded-md transition">Join Waitlist</a>
-    <a href="sign-in.html" class="w-full block text-center bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 text-white px-4 py-3 rounded-md transition">Sign In</a>
-  </div>
-
   <footer class="z-10 w-full text-center py-10 mt-auto border-t border-white/10">
     <div class="flex justify-center space-x-4 mb-4">
       <a href="#" class="text-gray-400 hover:text-white">Twitter</a>
@@ -138,8 +124,9 @@
   <script>
     const ref = new URLSearchParams(window.location.search).get('ref');
     if (ref) {
-     window.location.href = `join.html?ref=${encodeURIComponent(ref)}`;
+      window.location.href = `join.html?ref=${encodeURIComponent(ref)}`;
     }
+
     window.addEventListener('load', () => {
       setTimeout(() => {
         document.getElementById('splash').style.display = 'none';
@@ -159,7 +146,6 @@
       container.appendChild(star);
     }
 
-
     document.addEventListener('DOMContentLoaded', function () {
       const animatedElements = document.querySelectorAll('[data-animate]');
       const observer = new IntersectionObserver(entries => {
@@ -173,12 +159,20 @@
           }
         });
       }, { threshold: 0.1 });
-
       animatedElements.forEach(el => {
         el.style.opacity = 0;
         el.style.transform = 'translateY(20px)';
         observer.observe(el);
       });
+    });
+
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 10) {
+        navbar.classList.add('bg-black', 'border-b', 'border-white/10');
+      } else {
+        navbar.classList.remove('bg-black', 'border-b', 'border-white/10');
+      }
     });
   </script>
 </body>

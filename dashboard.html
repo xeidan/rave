@@ -39,22 +39,21 @@
     }
   </style>
 </head>
-<body class="bg-black text-white min-h-screen flex flex-col relative  overflow-x-hidden overflow-y-auto">
+<body class="bg-black text-white min-h-screen flex flex-col relative overflow-x-hidden overflow-y-auto">
   <div id="starfield" class="absolute inset-0 z-0 pointer-events-none overflow-hidden"></div>
   <div class="absolute inset-0 z-0 bg-gradient-to-br from-transparent to-[#1a1a1a]"></div>
 
-  <nav id="navbar" class="w-full flex sticky top-0 justify-between items-center py-4 px-4 z-20 relative">
+  <nav id="navbar" class="w-full flex sticky top-0 justify-between items-center py-4 px-4 z-30 relative">
     <img class="w-32" src="logo.svg" alt="Rave Logo">
     <div class="flex items-center space-x-4">
-      <span id="coinDisplay" class="bg-white/5 border border-white/10 px-3 py-1.5 text-sm rounded-md text-white hidden sm:inline-block">Loading Coins...</span>
-     <div class="relative z-20">
+      <span id="coinDisplay" class="bg-white/5 border border-white/10 px-3 py-1.5 text-sm rounded-md text-white inline-block">Loading Coins...</span>
+      <div class="relative z-20">
         <button id="hamburgerBtn" class="text-white focus:outline-none">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
-        <!-- HAMBURGER MENU BUTTONS -->
-        <div id="hamburgerMenu" class="hidden absolute right-0 mt-2 w-52 bg-white/5 border border-white/10 rounded-lg shadow-lg py-2 z-20">
+        <div id="hamburgerMenu" class="hidden absolute right-0 mt-2 w-52 bg-white/5 border border-white/10 rounded-lg shadow-lg py-2 z-40">
           <button id="closeMenuBtn" class="w-full text-right pr-4 text-white hover:text-red-400">✕</button>
           <a id="redeemLink" href="#" onclick="goToRedeem()" class="flex items-center gap-2 px-4 py-2 pb-6 text-sm text-white hover:text-cyan-300 active:text-cyan-300">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 512 512"><path d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-224c0-35.3-28.7-64-64-64L80 128c-8.8 0-16-7.2-16-16s7.2-16 16-16l368 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L64 32zM416 272a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>
@@ -69,7 +68,7 @@
     </div>
   </nav>
 
-  <div class="flex justify-center pt-14 relative z-5">
+  <div class="flex justify-center pt-14 relative z-10">
     <div class="w-32 h-32 flex items-center justify-center duration-1000 ease-out">
       <img src="holl.png" alt="">
     </div>
@@ -88,11 +87,42 @@
       <path d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-224c0-35.3-28.7-64-64-64L80 128c-8.8 0-16-7.2-16-16s7.2-16 16-16l368 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L64 32zM416 272a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/>
     </symbol>
     <symbol id="icon-leaderboard" viewBox="0 0 384 512">
-      <path d="M192 0c-41.8 0-77.4 26.7-90.5 64L64 64C28.7 64 0 92.7 0 128L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64l-37.5 0C269.4 26.7 233.8 0 192 0zm0 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64zM72 272a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm104-16l128 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-128 0c-8.8 0-16-7.2-16-16s7.2-16 16-16zM72 368a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm88 0c0-8.8 7.2-16 16-16l128 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-128 0c-8.8 0-16-7.2-16-16z"/>
+      <path d="M192 0c-41.8 0-77.4 26.7-90.5 64L64 64C28.7 64 0 92.7 0 128L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64l-37.5 0C269.4 26.7 233.8 0 192 0zm0 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64zM72 272a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm104-16l128 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-128 0c-8.8 0-16-7.2-16-16s7.2-16 16-16zM72 368a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm88 0c0-8.8 7.2-16 16-16l128 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-128 0c-8.8 0-16-7.2-16-16z"/></svg>
     </symbol>
   </svg>
-  
-  <main class="pt-6 px-6 max-w-6xl mx-auto z-10 relative pb-28">
+
+  <section class="px-4">
+    <div class="max-w-xl mx-auto bg-white/5 border border-white/10 rounded-2xl p-6 text-center shadow-lg z-10 relative">
+    <h2 class="text-lg font-semibold mb-2">Share your referral link:</h2>
+    <div class="flex items-center justify-center gap-2 bg-black/30 px-3 py-2 rounded-lg mb-4">
+      <input id="referralLink" class="bg-transparent text-white text-sm w-full outline-none" readonly value="https://earnrave.com/?ref=nwB" />
+      <button onclick="
+        const referralInput = document.getElementById('referralLink');
+        navigator.clipboard.writeText(referralInput.value);
+        const button = this;
+        const originalText = button.textContent;
+        button.textContent = 'Copied!';
+        setTimeout(() => {
+          button.textContent = originalText;
+        }, 2000); // Revert to 'Copy' after 2 seconds
+      " class="bg-white/5 border border-white/10 text-sm px-3 py-1 rounded hover:bg-cyan-600 active:bg-cyan-700">Copy</button>
+    </div>
+    <div class="mb-2">
+      <p class="text-sm text-gray-300 mb-2">Referral Progress:</p>
+      <div class="h-3 bg-white/10 rounded-full overflow-hidden">
+        <div id="progressBar" class="h-full bg-gradient-to-r from-green-400 via-cyan-400 to-blue-500" style="width: 0%;"></div>
+      </div>
+      <p class="text-sm mt-1 text-gray-200" id="progressText">0/5 referrals (₦100 target)</p>
+      <p class="mt-2 text-cyan-400 font-semibold hidden" id="redeemMessage">
+        </p>
+    </div>
+    <p class="mt-4 text-pink-400 font-semibold" id="currentTierGoalMessage">
+      Share with 5 friends to win <span class="text-white font-bold">₦100 Airtime!</span>
+    </p>
+  </div>
+  </section>
+
+  <main class="max-w-xl mx-auto pt-12 px-6 z-10 relative pb-28">
     <div class="grid md:grid-cols-2 gap-6 mb-8 fade-in">
       <div class="bg-white/5 border border-white/10 rounded-xl p-6 text-center">
         <h2 class="text-xl font-bold">Invited</h2>
@@ -123,6 +153,11 @@
   </footer>
 
   <script>
+    // Force scroll to top on page load
+    window.onload = function() {
+      window.scrollTo(0, 0);
+    };
+
     const container = document.getElementById('starfield');
     for (let i = 0; i < 100; i++) {
       const star = document.createElement('div');
@@ -150,16 +185,75 @@
       document.getElementById('coinDisplay').textContent = `${coins} Rave Coins`;
 
       document.getElementById('leaderboardBtn').href = `leaderboard.html?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}&code=${encodeURIComponent(code)}&coins=${encodeURIComponent(coins)}`;
-      document.getElementById('referralBtn')?.remove();
       document.getElementById('redeemLink').href = `redeem.html?email=${encodeURIComponent(email)}`;
 
       fetch(`https://pure-sea-47438-9b41a08c5720.herokuapp.com/me?email=${encodeURIComponent(email)}`)
         .then(res => res.json())
         .then(data => {
-          document.getElementById('invitedCount').textContent = data.referral_count || 0;
+          const totalReferrals = data.referral_count || 0; // Total lifetime referrals
+          
+          document.getElementById('invitedCount').textContent = totalReferrals; // Always show total invited
           document.getElementById('earnedCoins').textContent = `${data.rave_coins || 0} RAVE COINS`;
           document.getElementById('referralCode').textContent = data.referral_code || 'N/A';
           document.getElementById('bonusStatus').textContent = data.bonus_awarded ? '✅ Earned' : 'Not Yet Earned';
+
+          // --- New Simplified Logic for Tiered Referral Progress ---
+          const progressBar = document.getElementById('progressBar');
+          const progressText = document.getElementById('progressText');
+          const currentTierGoalMessage = document.getElementById('currentTierGoalMessage');
+          const redeemMessage = document.getElementById('redeemMessage');
+
+          let displayedProgress = totalReferrals;
+          let displayMax = 0;
+          let goalAirtimeText = '';
+          let airtimeRedeemMessage = '';
+
+          if (totalReferrals < 5) {
+            displayMax = 5;
+            goalAirtimeText = '₦100 Airtime!';
+            currentTierGoalMessage.innerHTML = `Share with ${displayMax} friends to win <span class="text-white font-bold">${goalAirtimeText}</span>`;
+            redeemMessage.classList.add('hidden'); // Hide redeem message until a tier is completed
+
+          } else if (totalReferrals >= 5 && totalReferrals < 25) {
+            displayMax = 25;
+            goalAirtimeText = '₦500 Airtime!';
+            currentTierGoalMessage.innerHTML = `Share with ${displayMax} friends to win <span class="text-white font-bold">${goalAirtimeText}</span>`;
+            // N100 Airtime is earned at 5 referrals
+            airtimeRedeemMessage = "🎉 You've reached 5 referrals! Your ₦100 Airtime is ready to redeem!";
+            redeemMessage.textContent = airtimeRedeemMessage;
+            redeemMessage.classList.remove('hidden');
+
+          } else if (totalReferrals >= 25 && totalReferrals < 100) {
+            displayMax = 100;
+            goalAirtimeText = '₦10,000 Airtime!';
+            currentTierGoalMessage.innerHTML = `Share with ${displayMax} friends to win <span class="text-white font-bold">${goalAirtimeText}</span>`;
+            // N500 Airtime is earned at 25 referrals
+            airtimeRedeemMessage = "🎉 You've reached 25 referrals! Your ₦500 Airtime is ready to redeem!";
+            redeemMessage.textContent = airtimeRedeemMessage;
+            redeemMessage.classList.remove('hidden');
+
+          } else { // totalReferrals >= 100
+            displayMax = 100; // Cap at 100 for display
+            displayedProgress = 100; // Ensure progress bar is full
+            goalAirtimeText = '₦10,000 Airtime!';
+            currentTierGoalMessage.innerHTML = `Congratulations! You've earned <span class="text-white font-bold">${goalAirtimeText}</span> Keep referring for more coins!`;
+            // N10,000 Airtime is earned at 100 referrals
+            airtimeRedeemMessage = "🎉 You've reached 100 referrals! Your ₦10,000 Airtime is ready to redeem!";
+            redeemMessage.textContent = airtimeRedeemMessage;
+            redeemMessage.classList.remove('hidden');
+          }
+
+          // Update progress bar width based on the current tier's max
+          const progressPercentage = (displayedProgress / displayMax) * 100;
+          progressBar.style.width = `${progressPercentage}%`;
+          
+          // Update progress text (e.g., "3/5 referrals (₦100 target)")
+          progressText.textContent = `${totalReferrals}/${displayMax} referrals (${goalAirtimeText.replace('!', '')} target)`;
+          // --- End New Simplified Logic ---
+        })
+        .catch(error => {
+          console.error('Error fetching user data:', error);
+          // Handle error, maybe display a message to the user
         });
     });
 
@@ -216,6 +310,20 @@
   window.location.href = targetUrl;
 }
 
+  function goToLeaderboard() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email');
+    const name = urlParams.get('name');
+    const code = urlParams.get('code');
+    const coins = urlParams.get('coins');
+
+    if (!email || !name || !code || !coins) {
+      alert('Missing user data');
+      return;
+    }
+    const targetUrl = `leaderboard.html?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}&code=${encodeURIComponent(code)}&coins=${encodeURIComponent(coins)}`;
+    window.location.href = targetUrl;
+  }
 
   function setActive(tabId) {
       document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('text-cyan-300', 'scale-110'));
