@@ -26,89 +26,92 @@
       0% { transform: translate(0, 0); }
       100% { transform: translate(30px, 30px); }
     }
-    @keyframes soft-pulse {
-      0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(216, 180, 254, 0.4);
-      }
-      50% {
-        transform: scale(1.03);
-        box-shadow: 0 0 15px 5px rgba(168, 85, 247, 0.6);
-      }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease-out forwards;
     }
-    .soft-pulse {
-      animation: soft-pulse 2s infinite ease-in-out;
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
-<body class="bg-black text-white min-h-screen flex flex-col relative px-4 overflow-x-hidden">
+<body class="bg-black text-white min-h-screen flex flex-col relative  overflow-x-hidden overflow-y-auto">
   <div id="starfield" class="absolute inset-0 z-0 pointer-events-none overflow-hidden"></div>
   <div class="absolute inset-0 z-0 bg-gradient-to-br from-transparent to-[#1a1a1a]"></div>
 
-  <nav class="py-4 w-full flex justify-between items-center z-10 relative">
+  <nav id="navbar" class="w-full flex sticky top-0 justify-between items-center py-4 px-4 z-20 relative">
     <img class="w-32" src="logo.svg" alt="Rave Logo">
-    <span id="coinDisplay" class="bg-white/5 border border-white/10 px-3 py-1.5 text-sm rounded-md hover:bg-white/10 transition">Loading Coins...</span>
+    <div class="flex items-center space-x-4">
+      <span id="coinDisplay" class="bg-white/5 border border-white/10 px-3 py-1.5 text-sm rounded-md text-white hidden sm:inline-block">Loading Coins...</span>
+     <div class="relative z-20">
+        <button id="hamburgerBtn" class="text-white focus:outline-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <!-- HAMBURGER MENU BUTTONS -->
+        <div id="hamburgerMenu" class="hidden absolute right-0 mt-2 w-52 bg-white/5 border border-white/10 rounded-lg shadow-lg py-2 z-20">
+          <button id="closeMenuBtn" class="w-full text-right pr-4 text-white hover:text-red-400">✕</button>
+          <a id="redeemLink" href="#" onclick="goToRedeem()" class="flex items-center gap-2 px-4 py-2 pb-6 text-sm text-white hover:text-cyan-300 active:text-cyan-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 512 512"><path d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-224c0-35.3-28.7-64-64-64L80 128c-8.8 0-16-7.2-16-16s7.2-16 16-16l368 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L64 32zM416 272a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>
+            Redeem
+          </a>
+          <a id="leaderboardBtn" href="#" onclick="goToLeaderboard()" class="flex items-center gap-2 px-4 py-2 text-sm text-white hover:text-cyan-300 active:text-cyan-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 384 512"><path d="M192 0c-41.8 0-77.4 26.7-90.5 64L64 64C28.7 64 0 92.7 0 128L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64l-37.5 0C269.4 26.7 233.8 0 192 0zm0 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64zM72 272a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm104-16l128 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-128 0c-8.8 0-16-7.2-16-16s7.2-16 16-16zM72 368a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm88 0c0-8.8 7.2-16 16-16l128 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-128 0c-8.8 0-16-7.2-16-16z"/></svg>
+            Leaderboard
+          </a>
+        </div>
+      </div>
+    </div>
   </nav>
 
-  <div class="flex justify-center pt-14 relative z-10">
+  <div class="flex justify-center pt-14 relative z-5">
     <div class="w-32 h-32 flex items-center justify-center duration-1000 ease-out">
       <img src="holl.png" alt="">
     </div>
   </div>
 
-  <div class="z-10 relative flex flex-col items-center justify-center py-12">
+  <div class="z-10 relative flex flex-col items-center justify-center py-6">
     <h1 id="userName" class="text-3xl font-semibold mb-2 bg-gradient-to-b from-gray-600 to-white text-transparent bg-clip-text"></h1>
     <p class="text-gray-300 pb-6" id="userEmail"></p>
-
-    <div id="referralSection" class="w-full max-w-lg bg-white/5 border border-white/10 p-6 rounded-lg mb-8">
-      <p class="text-white mb-2">Share your referral link:</p>
-      <div class="flex items-center gap-2">
-        <input id="referralLink" class="flex-1 bg-transparent border border-white/10 rounded px-4 py-2 text-white" readonly>
-        <button id="copyButton" class="bg-white/5 border border-white/10 px-4 py-2 text-sm rounded-md hover:bg-white/10 transition">Copy</button>
-      </div>
-      <div class="mt-6">
-        <p class="text-gray-300 mb-2">Referral Progress:</p>
-        <div class="w-full bg-white/10 rounded-full h-4 overflow-hidden">
-          <div id="progressBar" class="bg-gradient-to-r from-green-400 to-blue-500 h-4" style="width: 0%"></div>
-        </div>
-        <p class="text-sm text-gray-400 mt-2"><span id="referralCount">0</span>/5 referrals (20 coins each)</p>
-        <p class="text-sm text-pink-400 mt-4 text-center font-semibold">
-          Share with 5 friends to win <span class="text-white">100 Rave Coins!</span>
-        </p>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-3 gap-4 w-full max-w-6xl">
-      <div class="bg-white/5 border border-cyan-300 p-4 rounded-lg transform transition-transform duration-200 hover:scale-105">
-        <h3 class="text-md font-medium mb-2">3x</h3>
-        <p class="text-xs font-extralight text-gray-300">Upgrade to Premium to 3x your Earnings</p>
-        <a href="premium.html" class="mt-4 w-full inline-flex justify-center items-center gap-2 text-sm text-white bg-white/5 border border-white/10 px-3 py-1.5 rounded-md hover:bg-white/10 transition">
-          Upgrade
-        </a>
-      </div>
-
-      <div class="bg-white/5 border border-purple-300 p-4 rounded-lg shadow-lg soft-pulse transform transition-transform duration-200 hover:scale-105">
-        <h3 class="text-md font-medium mb-2">Earn More</h3>
-        <p class="text-xs font-extralight text-gray-300">Login Daily to Earn and Claim Rewards</p>
-        <a id="earnLink" href="#" class="mt-4 w-full inline-flex justify-center items-center gap-2 text-sm text-white bg-white/5 border border-white/10 px-3 py-1.5 rounded-md hover:bg-white/10 transition">
-          Earn
-        </a>
-      </div>
-
-      <div class="bg-white/5 border border-blue-300 p-4 rounded-lg transform transition-transform duration-200 hover:scale-105">
-        <h3 class="text-md font-medium mb-2">Refer Now</h3>
-        <p class="text-xs font-extralight text-gray-300">Invite More Friends to Earn Rewards</p>
-        <a id="inviteLink" href="#" class="mt-4 w-full inline-flex justify-center items-center gap-2 text-sm text-white bg-white/5 border border-white/10 px-3 py-1.5 rounded-md hover:bg-white/10 transition">
-          Invite
-        </a>
-      </div>
-    </div>
   </div>
 
-  <div class="flex flex-col md:flex-row justify-center gap-4 py-6 px-28 fade-in items-center relative z-10">
-    <a id="redeemLink" class="text-sm bg-gradient-to-r from-[#00FFFF] to-blue-600 shadow-lg text-white px-6 py-3 rounded-md hover:opacity-90 transition">Redeem Coins</a>
-    <a href="sign-in.html" class="text-sm border border-white/10 bg-white/5 hover:bg-white/10 text-white/80 px-6 py-3 rounded-md transition">Sign Out</a>
-  </div>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="icon-home" viewBox="0 0 576 512">
+      <path d="M575.8 255.5c0 18-15 32.1-32 32.1l-32 0 .7 160.2c0 2.7-.2 5.4-.5 8.1l0 16.2c0 22.1-17.9 40-40 40l-16 0c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1L416 512l-24 0c-22.1 0-40-17.9-40-40l0-24 0-64c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32 14.3-32 32l0 64 0 24c0 22.1-17.9 40-40 40l-24 0-31.9 0c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2l-16 0c-22.1 0-40-17.9-40-40l0-112c0-.9 0-1.9 .1-2.8l0-69.7-32 0c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"/>
+    </symbol>
+    <symbol id="icon-redeem" viewBox="0 0 512 512">
+      <path d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-224c0-35.3-28.7-64-64-64L80 128c-8.8 0-16-7.2-16-16s7.2-16 16-16l368 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L64 32zM416 272a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/>
+    </symbol>
+    <symbol id="icon-leaderboard" viewBox="0 0 384 512">
+      <path d="M192 0c-41.8 0-77.4 26.7-90.5 64L64 64C28.7 64 0 92.7 0 128L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64l-37.5 0C269.4 26.7 233.8 0 192 0zm0 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64zM72 272a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm104-16l128 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-128 0c-8.8 0-16-7.2-16-16s7.2-16 16-16zM72 368a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm88 0c0-8.8 7.2-16 16-16l128 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-128 0c-8.8 0-16-7.2-16-16z"/>
+    </symbol>
+  </svg>
+  
+  <main class="pt-6 px-6 max-w-6xl mx-auto z-10 relative pb-28">
+    <div class="grid md:grid-cols-2 gap-6 mb-8 fade-in">
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6 text-center">
+        <h2 class="text-xl font-bold">Invited</h2>
+        <p id="invitedCount" class="text-3xl font-semibold text-green-400">0</p>
+      </div>
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6 text-center">
+        <h2 class="text-xl font-bold">Earned</h2>
+        <p id="earnedCoins" class="text-3xl font-semibold text-yellow-400">0 RAVE COINS</p>
+      </div>
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6 text-center">
+        <h2 class="text-xl font-bold">Referral Code</h2>
+        <p id="referralCode" class="text-xl font-mono text-blue-400 break-words">N/A</p>
+      </div>
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6 text-center">
+        <h2 class="text-xl font-bold">Bonus</h2>
+        <p id="bonusStatus" class="text-xl text-purple-400">Not Yet Earned</p>
+      </div>
+    </div>
+  </main>
 
   <footer class="z-10 w-full text-center py-10 mt-auto border-t border-white/10">
     <div class="flex justify-center space-x-4 mb-4">
@@ -133,14 +136,6 @@
       container.appendChild(star);
     }
 
-    document.getElementById('copyButton').addEventListener('click', () => {
-      const referralLinkInput = document.getElementById('referralLink');
-      referralLinkInput.select();
-      referralLinkInput.setSelectionRange(0, 99999);
-      document.execCommand('copy');
-      alert('Copied!');
-    });
-
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
       const email = urlParams.get('email');
@@ -150,24 +145,82 @@
 
       if (!email || !name || !code || !coins) return alert('Missing user data in URL.');
 
-      const referralCount = Math.floor(coins / 10);
-
       document.getElementById('userName').textContent = `Welcome, ${decodeURIComponent(name)}`;
       document.getElementById('userEmail').textContent = email;
       document.getElementById('coinDisplay').textContent = `${coins} Rave Coins`;
-      document.getElementById('referralLink').value = `https://earnrave.com/?ref=${code}`;
-      document.getElementById('referralCount').textContent = referralCount;
-      document.getElementById('progressBar').style.width = `${Math.min(referralCount * 20, 100)}%`;
-      document.getElementById('inviteLink').href = `referral.html?email=${encodeURIComponent(email)}&ref=${encodeURIComponent(code)}`;
-      document.getElementById('redeemLink').href = `redeem.html?email=${encodeURIComponent(email)}`;
-      document.getElementById('earnLink').href = `earn.html?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}&code=${encodeURIComponent(code)}&coins=${encodeURIComponent(coins)}`;
 
-      if (referralCount >= 5) {
-        const referralSection = document.getElementById('referralSection');
-        if (referralSection) referralSection.style.display = 'none';
+      document.getElementById('leaderboardBtn').href = `leaderboard.html?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}&code=${encodeURIComponent(code)}&coins=${encodeURIComponent(coins)}`;
+      document.getElementById('referralBtn')?.remove();
+      document.getElementById('redeemLink').href = `redeem.html?email=${encodeURIComponent(email)}`;
+
+      fetch(`https://pure-sea-47438-9b41a08c5720.herokuapp.com/me?email=${encodeURIComponent(email)}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('invitedCount').textContent = data.referral_count || 0;
+          document.getElementById('earnedCoins').textContent = `${data.rave_coins || 0} RAVE COINS`;
+          document.getElementById('referralCode').textContent = data.referral_code || 'N/A';
+          document.getElementById('bonusStatus').textContent = data.bonus_awarded ? '✅ Earned' : 'Not Yet Earned';
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const btn = document.getElementById('hamburgerBtn');
+    const menu = document.getElementById('hamburgerMenu');
+    const closeBtn = document.getElementById('closeMenuBtn');
+    const navbar = document.getElementById('navbar');
+
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+
+    closeBtn.addEventListener('click', () => {
+      menu.classList.add('hidden');
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!menu.contains(event.target) && !btn.contains(event.target)) {
+        menu.classList.add('hidden');
       }
     });
+
+    const links = menu.querySelectorAll('a');
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        menu.classList.add('hidden');
+      });
+    });
+
+    window.addEventListener('scroll', function () {
+      if (window.scrollY > 10) {
+        navbar.classList.add('bg-black', 'border-b', 'border-white/10');
+      } else {
+        navbar.classList.remove('bg-black', 'border-b', 'border-white/10');
+      }
+    });
+  });
+
+  function goToRedeem() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const email = urlParams.get('email');
+  const name = urlParams.get('name');
+  const code = urlParams.get('code');
+  const coins = urlParams.get('coins');
+
+  if (!email || !name || !code || !coins) {
+    alert('Missing user data');
+    return;
+  }
+
+  // Navigate with query parameters
+  const targetUrl = `redeem.html?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}&code=${encodeURIComponent(code)}&coins=${encodeURIComponent(coins)}`;
+  window.location.href = targetUrl;
+}
+
+
+  function setActive(tabId) {
+      document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('text-cyan-300', 'scale-110'));
+      document.getElementById(tabId).classList.add('text-cyan-300', 'scale-110');
+    }
   </script>
 </body>
 </html>
-
