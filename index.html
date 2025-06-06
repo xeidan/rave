@@ -1,45 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Earn Rave</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    html, body { overflow-x: hidden; margin: 0; padding: 0; }
-    body { font-family: 'Inter', sans-serif; }
-    .star {
-      background-color: white;
-      border-radius: 50%;
-      position: absolute;
-      animation: twinkling 2s infinite, move 10s infinite;
-    }
-    @keyframes twinkling {
-      0% { opacity: 0.6; }
-      50% { opacity: 1; }
-      100% { opacity: 0.6; }
-    }
-    @keyframes move {
-      0% { transform: translate(0, 0); }
-      100% { transform: translate(50px, 50px); }
-    }
-    @keyframes logoFadeIn {
-      0% { opacity: 0; transform: scale(0.9); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-    #logoSplash { animation: logoFadeIn 1.5s ease-out forwards; }
-    .spinner {
-      width: 48px;
-      height: 48px;
-      border: 3px solid #00FFFF;
-      border-top: 3px solid transparent;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earn Rave</title>
+  
+    <!-- SEO Meta Description -->
+    <meta name="description" content="Earn Rave lets you earn cash by inviting friends, watching ads, and completing simple online tasks. Join our waitlist and start earning today!">
+  
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+    <meta property="og:title" content="Earn Rave – Make Money Online in Nigeria">
+    <meta property="og:description" content="Get paid to refer friends, watch ads, and complete daily tasks. Join Earn Rave and earn real cash rewards.">
+    <meta property="og:image" content="https://earnrave.com/waitlist.jpg">
+    <meta property="og:url" content="https://earnrave.com">
+    <meta property="og:type" content="website">
+  
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Earn Rave – Make Money Online in Nigeria">
+    <meta name="twitter:description" content="Earn coins and convert to cash by referring friends, watching ads, and more. Sign up now!">
+    <meta name="twitter:image" content="https://earnrave.com/waitlist.jpg">
+  
+    <!-- Favicon (optional) -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  
+    <!-- Tailwind + Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  
+    <!-- Custom Styles -->
+    <style>
+      html, body { overflow-x: hidden; margin: 0; padding: 0; }
+      body { font-family: 'Inter', sans-serif; }
+      .star {
+        background-color: white;
+        border-radius: 50%;
+        position: absolute;
+        animation: twinkling 2s infinite, move 10s infinite;
+      }
+      @keyframes twinkling {
+        0% { opacity: 0.6; }
+        50% { opacity: 1; }
+        100% { opacity: 0.6; }
+      }
+      @keyframes move {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(50px, 50px); }
+      }
+      @keyframes logoFadeIn {
+        0% { opacity: 0; transform: scale(0.9); }
+        100% { opacity: 1; transform: scale(1); }
+      }
+      #logoSplash { animation: logoFadeIn 1.5s ease-out forwards; }
+      .spinner {
+        width: 48px;
+        height: 48px;
+        border: 3px solid #00FFFF;
+        border-top: 3px solid transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+  </head>
+  
 <body class="bg-black text-white min-h-screen flex flex-col items-center relative px-4 overflow-x-hidden overflow-y-auto">
   <div id="starfield" class="absolute inset-0 z-0 pointer-events-none overflow-hidden"></div>
   <div class="absolute inset-0 pointer-events-none z-0 bg-gradient-to-br from-transparent to-[#1a1a1a]"></div>
@@ -128,10 +152,12 @@
     }
 
     window.addEventListener('load', () => {
-      setTimeout(() => {
-        document.getElementById('splash').style.display = 'none';
-      }, 2000);
-    });
+  setTimeout(() => {
+    window.scrollTo(0, 0); // ← This line ensures top scroll
+    document.getElementById('splash').style.display = 'none';
+  }, 2000);
+});
+
 
     const container = document.getElementById('starfield');
     for (let i = 0; i < 100; i++) {

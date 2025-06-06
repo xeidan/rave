@@ -110,7 +110,7 @@
     <div class="mb-2">
       <p class="text-sm text-gray-300 mb-2">Referral Progress:</p>
       <div class="h-3 bg-white/10 rounded-full overflow-hidden">
-        <div id="progressBar" class="h-full bg-gradient-to-r from-green-400 via-cyan-400 to-blue-500" style="width: 0%;"></div>
+        <div id="progressBar" class="h-full bg-gradient-to-r from-[#00FFFF] to-blue-600" style="width: 0%;"></div>
       </div>
       <p class="text-sm mt-1 text-gray-200" id="progressText">0/5 referrals (₦100 target)</p>
       <p class="mt-2 text-cyan-400 font-semibold hidden" id="redeemMessage">
@@ -121,6 +121,16 @@
     </p>
   </div>
   </section>
+
+  <!-- Redeem Button -->
+  <div class="flex justify-center my-6 z-10 relative">
+    <button id="manualRedeemBtn" class="bg-gradient-to-r from-[#00FFFF] to-blue-600 hover:opacity-90 text-white font-semibold py-3 px-6 rounded-md transition">
+      Redeem Now
+    </button>
+  </div>
+  <p id="redeemFeedback" class="text-center text-sm text-yellow-400 mt-2"></p>
+  
+
 
   <main class="max-w-xl mx-auto pt-12 px-6 z-10 relative pb-28">
     <div class="grid md:grid-cols-2 gap-6 mb-8 fade-in">
@@ -178,6 +188,18 @@
       const code = urlParams.get('code');
       const coins = urlParams.get('coins');
 
+      let redeemedTiers = [];
+
+    fetch(`https://pure-sea-47438-9b41a08c5720.herokuapp.com/redemptions/${encodeURIComponent(email)}`)
+      .then(res => res.json())
+      .then(data => {
+        redeemedTiers = data.redeemedTiers || [];
+      })
+      .catch(err => {
+        console.error('Redemption check failed', err);
+      });
+
+
       if (!email || !name || !code || !coins) return alert('Missing user data in URL.');
 
       document.getElementById('userName').textContent = `Welcome, ${decodeURIComponent(name)}`;
@@ -191,6 +213,46 @@
         .then(res => res.json())
         .then(data => {
           const totalReferrals = data.referral_count || 0; // Total lifetime referrals
+
+         
+          const redeemBtn = document.getElementById('manualRedeemBtn');
+        const feedback = document.getElementById('redeemFeedback');
+
+        redeemBtn.addEventListener('click', () => {
+          let redirectAllowed = false;
+          let requiredCount = 0;
+          let tier = 0;
+
+          if (totalReferrals >= 100) {
+            requiredCount = 100;
+            tier = 10000;
+          } else if (totalReferrals >= 25) {
+            requiredCount = 25;
+            tier = 500;
+          } else if (totalReferrals >= 5) {
+            requiredCount = 5;
+            tier = 100;
+          } else {
+            requiredCount = 5;
+          }
+
+          // If user hasn’t met referral requirement
+          if (totalReferrals < requiredCount) {
+            feedback.textContent = `Wait till you complete ${requiredCount}/${requiredCount} referrals. You have ${totalReferrals}/${requiredCount}.`;
+            return;
+          }
+
+          // Check if tier already redeemed
+          if (redeemedTiers.includes(tier)) {
+            feedback.textContent = `You've already redeemed the ₦${tier} Airtime reward.`;
+            return;
+          }
+
+          // All clear – redirect
+          const redeemUrl = `redeem.html?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}&code=${encodeURIComponent(code)}&coins=${encodeURIComponent(coins)}`;
+          window.location.href = redeemUrl;
+        });
+
           
           document.getElementById('invitedCount').textContent = totalReferrals; // Always show total invited
           document.getElementById('earnedCoins').textContent = `${data.rave_coins || 0} RAVE COINS`;
@@ -329,6 +391,7 @@
       document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('text-cyan-300', 'scale-110'));
       document.getElementById(tabId).classList.add('text-cyan-300', 'scale-110');
     }
+
   </script>
 </body>
 </html>
